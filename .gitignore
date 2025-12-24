@@ -12,6 +12,7 @@ env/
 .DS_Store
 .vscode/
 Data_Numpy_Arrays_RSL_UzSL/
+data/
 # C extensions
 *.so
 
