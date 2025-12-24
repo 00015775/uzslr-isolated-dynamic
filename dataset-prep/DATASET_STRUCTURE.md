@@ -90,7 +90,8 @@ The dataset will be split into three subsets: **training**, **validation**, and 
 - **Repetitions per sign:** 38 signs × 52 repetitions, 12 signs × 51 repetitions
 - **File format:** NumPy arrays (`.npy`)
 - **Glossary:** "rep" = repetition
-
+- **Total repetition folders:** 2588 (38x52 + 12x51)
+- **Total `frame-XX.npy` files:** 82816
 
 **Reference** 
 Information learned from [HuggingFace - File names and splits](https://huggingface.co/docs/hub/datasets-file-names-and-splits)
