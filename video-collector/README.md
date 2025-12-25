@@ -56,7 +56,7 @@ It supports:
         ├── 03_check_rep_consistency.py         # Data consistency checker for each repetitions present in landmarks and videos folder
         ├── 04_visualize_landmarks.py           # Loads one frame-XX.npy file and displays its 3D landmarks in an interactive Plotly plot
         ├── 05_verify_npy_shapes.py             # Verifies that every frame-*.npy file in the dataset has the exact shape (1662,)
-        └── 06_trash_unwanted_sign.py           # Safely moves selected sign folders to the macOS Trash for all signers
+        └── 06_trash_unwanted_sign.py           # (CAUTION!) Moves selected sign folders to the macOS Trash for all signers 
 </pre>
 
 
@@ -143,7 +143,14 @@ Each script serves a specific purpose:
 - [**03_check_rep_consistency.py**](./dataset-checks/03_check_rep_consistency.py) → Verifies that each repetition folder contains the same number of frames in both `landmarks/` and `videos/`. Ensures consistency between video and landmark data.
 - [**04_visualize_landmarks.py**](./dataset-checks/04_visualize_landmarks.py) → Loads a single `frame-XX.npy` file and renders its 3D landmarks using Plotly for quick visual inspection.
 - [**05_verify_npy_shapes.py**](./dataset-checks/05_verify_npy_shapes.py) → Confirms that every `.npy` file has the expected shape `(1662,)`. Detects corrupted or incorrect landmark files.
-- [**06_trash_unwanted_sign.py**](./dataset-checks/06_trash_unwanted_sign.py) → Safely moves selected sign folders to the macOS Trash, allowing removal of unwanted signs without accidental data loss.
+
+> [!CAUTION]
+> The `06_trash_unwanted_sign.py` script moves sign folders to the **macOS Trash**.  
+> - On **other OS**, behavior may be **unpredictable**.  
+> - **Backup your dataset** before running.  
+> - Running this script outside macOS, or in general, is **not recommended**.  
+> - For safety, consider writing your **own deletion script** for your OS.  
+> - [**06_trash_unwanted_sign.py**](./dataset-checks/06_trash_unwanted_sign.py) → Moves selected sign folders to the macOS Trash, allowing removal of unwanted signs without accidental data loss.
 
 
 ## Customizing for Other Sign Languages
