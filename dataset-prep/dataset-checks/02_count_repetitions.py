@@ -1,5 +1,6 @@
 """
 (READ-ONLY file)
+
 Counts and displays the total number of repetitions (rep-X folders) for each sign 
 in the 'data/' directory.
 
