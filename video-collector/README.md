@@ -1,13 +1,15 @@
 # Uzbek Sign Language (UzSL) Video Collector  
   
 **Python:** `3.9.23`  
-**Author:** Custom-built for isolated dynamic sign collection  
-**Purpose:** Record **videos** + **per-frame MediaPipe landmarks** in a structured, scalable way  
+**Author:** Custom-built for isolated dynamic sign collection.  
+**Purpose:** Record **videos** + **per-frame MediaPipe landmarks** in a structured, scalable way.
 
+> [!IMPORTANT]
 > **Note:** The `video-collector` stage is **the first step** of this project if you are collecting Uzbek Sign Language (UzSL) videos from real-world signers. This step records videos and extracts **per-frame MediaPipe landmarks**, storing them in a structured format under `video-collector/Data_Numpy_Arrays_RSL_UzSL`. It ensures that all signers, signs, and repetitions are properly captured and validated.
-
+>
 > Once the dataset is collected and verified in `video-collector/Data_Numpy_Arrays_RSL_UzSL`, the **next step** is [`dataset-prep`](../dataset-prep/). The `dataset-prep` stage reorganizes these raw landmarks, copies them into a root `/data/` folder, and splits them into **train, validation, and test sets**, preparing the dataset for subsequent preprocessing and model training.
-
+>
+> **Important:** Because the dataset can be quite large (~3 GB), the `Data_Numpy_Arrays_RSL_UzSL` folder is included in `.gitignore` to prevent accidental versioning.
 ---
 
 ## Overview
@@ -19,7 +21,7 @@ It supports:
 - Dynamic **sign word list** (add words anytime)  
 - **Multiple repetitions** per sign  
 - **Real-time feedback** (countdown, rep count, tree view)  
-- **Automatic folder & file management**  
+- **Automatic folder and file management**  
 
 
 ## 3 Stages of Workflow
@@ -84,7 +86,7 @@ It supports:
 ## Install Dependencies and Activate Environment
 For the sake of separation of concerns, the `video-collector` stage of the project has its own dedicated environment. In order to able to do video collection with required dependencies, run the following commands to create the environment:
 ```shell
-conda env create -f video-collector/environment-video-collector.yml
+conda env create -f environment-video-collector.yml
 
 conda activate video_collector_env
 ```
@@ -146,13 +148,14 @@ Each script serves a specific purpose:
 
 ## Customizing for Other Sign Languages
 
+> [!TIP]
 > **Note:** Although this `video-collector` is designed for collecting Uzbek Sign Language (UzSL) videos, it can be adapted to collect videos for **any other sign language**.
 
 To customize:
 
 1. **Change signs:**  
    - Open [`video-collector/mod01_config.py`](./mod01_config.py).  
-   - Replace the existing `DEFAULT_SIGNS` dictionary (50 Uzbek signs) with your desired signs.  
+   - Replace the existing [`DEFAULT_SIGNS`](https://github.com/00015775/uzslr-isolated-dynamic/blob/8d8d4a92541a8bef6084d4f5b04dfd00e91e2d9b/video-collector/mod01_config.py#L32) dictionary (50 Uzbek signs) with your desired signs.  
    - **Important:** Keep the dictionary name as `DEFAULT_SIGNS`, since it is referenced in other `video-collector` scripts.  
    - **Additional note:** If you change `DEFAULT_SIGNS`, you must also update the corresponding `DEFAULT_SIGNS` used in all `dataset-checks` scripts for both `video-collector` (`dataset-checks/`) and `dataset-prep` ([`dataset-prep/dataset-checks/`](../dataset-prep/dataset-checks/)) so that checks remain consistent.
    - Also update `DEFAULT_SIGNS` in other `.py` files that use it.
@@ -175,13 +178,16 @@ If you rename the dataset folder, you must also update all scripts that referenc
 - Any `dataset-checks` scripts in [`video-collector/dataset-checks/`](./dataset-checks/)
 - Possibly other `.py` files in `video-collector` and `dataset-prep` where the folder path is used.
 
+> [!WARNING]
 > **Note:** Failing to update all references will cause the scripts to fail or produce incorrect outputs. Following these steps allows you to collect videos for any set of signs while keeping the landmark extraction, dataset validation, and subsequent dataset preparation ([`dataset-prep`](../dataset-prep/)) steps fully compatible.
->
+
+> [!TIP]
 > **Tip:** To avoid manually searching through files, use GitHub search within this repository to locate all occurrences of `DEFAULT_SIGNS` and `Data_Numpy_Arrays_RSL_UzSL` in `.py` files that may need updating or changing.
 
 
 ## Next Steps: Dataset Preparation
 
+> [!IMPORTANT]
 > **Note:** Once the dataset is collected and verified, the [**dataset-prep**](../dataset-prep/) phase must be followed.  
 > The `dataset-prep` step copies and reorganizes the extracted landmarks from `video-collector/Data_Numpy_Arrays_RSL_UzSL` into a `/data/` folder located at the root level and splits them into **train, validation, and test sets**. It prepares the dataset for further data preprocessing and model training.  
 > 

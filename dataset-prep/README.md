@@ -4,6 +4,8 @@
 
 The functions in the `/dataset-prep/` folder are intended to be executed **after** completing all functions and steps in the [`/video-collector/`](../video-collector/) folder. Before running any commands here, ensure that the video collection and landmark extraction steps in `/video-collector/` are fully completed.
 
+---
+
 ## Relationship with `video-collector`
 
 The `dataset-prep` folder reorganizes an **existing dataset**, assuming the dataset is located at: `video-collector/Data_Numpy_Arrays_RSL_UzSL`
@@ -92,19 +94,23 @@ After reorganizing the dataset, [`step02_train_val_test_split.py`](../dataset-pr
 **Reference:** Information learned from [HuggingFace - File names and splits](https://huggingface.co/docs/hub/datasets-file-names-and-splits)
 
 > **Note:** `step02_train_val_test_split.py` copies landmarks into the new splits without removing the pre-split data. The dataset size will **double** temporarily. After verifying the splits, you may remove the original `{sign}` folders in `/data/`.
->
-> **Environment:** Use the [`video_collector_env`](../video-collector/environment-video-collector.yml) environment for both `video-collector` and `dataset-prep` steps. Although only basic Python libraries are required for `dataset-prep`, using the same environment ensures compatibility.
->
-> **Caution:** These scripts operate on GB-sized datasets and are intended to run **only once**.
+
+---
 
 ## Order of Execution
 
+> [!IMPORTANT]
+> **Environment:** Use the [`video_collector_env`](../video-collector/environment-video-collector.yml) environment for both `video-collector` and `dataset-prep` steps. Although only basic Python libraries are required for `dataset-prep`, using the same environment ensures compatibility.
+>
 > **Important:** Before running any Python function, ensure that you **change the working directory** to the folder where the intended `.py` file is located.  
 >
 > The file paths inside each script are **relative**, so running a script from a different directory may cause file or folder paths not to be found. In some cases, the script may still run without raising an error, but the outputs can be incorrect (such as, reporting missing data or empty results even though the data exists).  
 >
 > **Always execute the scripts from their own directory to ensure correct behavior!**
 
+
+> [!CAUTION]
+> These scripts modify **GB-sized datasets** and may accidentally overwrite or delete your dataset. They are intended to run **only once**.
 
 #### Example (Unix-like systems)
 
@@ -116,6 +122,7 @@ cd /path/to/where/function/resides
 python intended_function.py
 ```
 
+> [!NOTE]
 > The following commands assume that you are **already inside the directory of the corresponding `.py` file before executing it**.
 
 ### Phase 1: (`video-collector`)
@@ -161,6 +168,8 @@ python 04_check_frames_after_dataset_splits.py
 
 7. Optionally remove pre-split `{sign}` subfolders to save space.
 
+---
+
 ## Git Ignore Information
 
 Due to their large size, the following folders are included in `.gitignore`:
@@ -168,6 +177,8 @@ Due to their large size, the following folders are included in `.gitignore`:
 video-collector/Data_Numpy_Arrays_RSL_UzSL/     # ~3 GB
 data/                                           # ~1.1 GB pre-split, ~2.2 GB post-split
 </pre>
+
+---
 
 ## Dataset Info
 
