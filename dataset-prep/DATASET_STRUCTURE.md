@@ -93,5 +93,13 @@ The dataset will be split into three subsets: **training**, **validation**, and 
 - **Total repetition folders:** 2588 (38x52 + 12x51)
 - **Total `frame-XX.npy` files:** 82816
 
+
+## Post-Splitting Dataset Info
+- **Total repetitions for `train split`:** 2038 (40-41 reps per sign)
+- **Total repetitions for `validation split`:** 250 (5 reps per sign)
+- **Total repetitions for `test split`:** 300 (6 reps per sign)
+- **Total repetition folders:** 2588 (2038 + 250 + 300)
+
+
 **Reference** 
 Information learned from [HuggingFace - File names and splits](https://huggingface.co/docs/hub/datasets-file-names-and-splits)

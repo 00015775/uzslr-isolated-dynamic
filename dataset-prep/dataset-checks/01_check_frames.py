@@ -1,5 +1,6 @@
 """
 (READ-ONLY file)
+
 Check that every repetition folder (rep-X) for each sign contains exactly 32 frame-XX.npy files.
 Reports any folders with missing or extra frames.
 """
