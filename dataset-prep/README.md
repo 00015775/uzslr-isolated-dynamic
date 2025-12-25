@@ -1,6 +1,7 @@
 # Dataset Folder Reorganization
 
-> **Note:** This README is intentionally detailed and lengthy. The information provided here is essential for correctly preparing the dataset, without following these steps and specifications, the model will not have access to a valid or usable dataset.
+> [!IMPORTANT]
+> This `README` is **intentionally detailed and lengthy**. The information provided here is essential for correctly preparing the dataset, without following these steps and specifications, the **model will not have access to a valid or usable dataset.**
 
 The functions in the `/dataset-prep/` folder are intended to be executed **after** completing all functions and steps in the [`/video-collector/`](../video-collector/) folder. Before running any commands here, ensure that the video collection and landmark extraction steps in `/video-collector/` are fully completed.
 
@@ -93,6 +94,7 @@ After reorganizing the dataset, [`step02_train_val_test_split.py`](../dataset-pr
 
 **Reference:** Information learned from [HuggingFace - File names and splits](https://huggingface.co/docs/hub/datasets-file-names-and-splits)
 
+> [!NOTE]
 > **Note:** `step02_train_val_test_split.py` copies landmarks into the new splits without removing the pre-split data. The dataset size will **double** temporarily. After verifying the splits, you may remove the original `{sign}` folders in `/data/`.
 
 ---
@@ -202,7 +204,8 @@ data/                                           # ~1.1 GB pre-split, ~2.2 GB pos
 - **No signer-independence:** The dataset is **not split by signer**, so repetitions from the same signer can appear in training, validation, and test sets. This may cause the model to learn signer-specific patterns rather than general sign features.
 
 
-> **Final Note:** No data preprocessing is applied at this stage.  
+> [!NOTE]
+> No data preprocessing is applied at this stage.  
 > This stage only organizes, checks, and splits the raw landmark data so it is correctly structured and reliable.  
 > Although no preprocessing is applied here, this step is **foundational** — all subsequent data preprocessing and model training stages depend on the correctness of the dataset produced at this stage of `dataset-prep`.
 
@@ -222,7 +225,8 @@ Currently, there are only rough sketches of what data preprocessing will entail 
 
 **mediapipe version:** `0.10.21`
 
-> **Note:** The MediaPipe section below is provided for documentation and reference only.  
+> [!NOTE]
+> The MediaPipe section below is provided for documentation and reference only.  
 > Its purpose is to explain how landmarks are structured, stored in `.npy` files, and reconstructed into their original shapes.  
 > It is **not part of the `dataset-prep` pipeline**, and all `dataset-prep` steps are considered complete before this section.
 
@@ -289,6 +293,7 @@ The vector is a concatenation of four landmark groups, which are saved in a give
 - **4 values per point**: `(x, y, z, visibility)`
 - **Total values**: `33 × 4 = 132`
 
+> [!NOTE]
 > Even if some pose landmarks have `visibility = 0.0`, they are anyways saved into `.npy` and will be rendered in [`video-collector/dataset-checks/visualize_landmarks.py`](../video-collector/dataset-checks/04_visualize_landmarks.py).
 
 ### 3. Right Hand Landmarks
