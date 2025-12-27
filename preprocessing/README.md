@@ -1,8 +1,8 @@
 # Data Preprocessing Strategy for UzSLR
 
 > [!NOTE]
-> This `README` is intentionally verbose to document the full preprocessing rationale and pipeline.
-> Reference as to where this information was learned from, is provided below with relevant link.
+> This `README` is intentionally verbose to document the full preprocessing rationale and pipeline.  
+> **Reference as to where this information was learned from, is provided below with relevant link.**
 
 ## Problem Statement
 
@@ -322,10 +322,10 @@ By following this pipeline, we ensure that:
 
 **References List**
 -
-Computer Vision Engineer. (2023). Sign Language Detection with Python and Scikit Learn | Landmark Detection | Computer Vision Tutorial. [Video] Available at: https://www.youtube.com/watch?v=MJCSjXepaAM&t=3148s [Accessed: 27 October 2025]
+Computer Vision Engineer. (2023). _Sign Language Detection with Python and Scikit Learn | Landmark Detection | Computer Vision Tutorial_. [Video] Available at: https://www.youtube.com/watch?v=MJCSjXepaAM&t=3148s [Accessed: 27 October 2025]
 
-Goncharov, I. (2022). Custom Hand Gesture Recognition with Hand Landmarks Using Google’s Mediapipe + OpenCV in Python. [Video] Available at: https://www.youtube.com/watch?v=a99p_fAr6e4&list=PL0FM467k5KSyt5o3ro2fyQGt-6zRkHXRv [Accessed: 27 October 2025]
+Goncharov, I. (2022). _Custom Hand Gesture Recognition with Hand Landmarks Using Google’s Mediapipe + OpenCV in Python_. [Video] Available at: https://www.youtube.com/watch?v=a99p_fAr6e4&list=PL0FM467k5KSyt5o3ro2fyQGt-6zRkHXRv [Accessed: 27 October 2025]
 
-Renotte, N. (2021). Sign Language Detection using ACTION RECOGNITION with Python | LSTM Deep Learning Model. [Video] Available at: https://www.youtube.com/watch?v=doDUihpj6ro [Accessed: 21 October 2025]
+Renotte, N. (2021). _Sign Language Detection using ACTION RECOGNITION with Python | LSTM Deep Learning Model_. [Video] Available at: https://www.youtube.com/watch?v=doDUihpj6ro [Accessed: 21 October 2025]
 
 
