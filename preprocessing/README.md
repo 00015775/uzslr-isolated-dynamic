@@ -2,6 +2,7 @@
 
 > [!NOTE]
 > This `README` is intentionally verbose to document the full preprocessing rationale and pipeline.
+> Reference as to where this information was learned from, is provided below with relevant link.
 
 ## Problem Statement
 
@@ -39,6 +40,7 @@ We divide all coordinates by a reference distance (such as, wrist to middle fing
 
 ### 3. Rotation Normalization (Optional)
 We rotate all points to ensure the wrist-to-index direction maintains consistent orientation.
+
 **Effect**: Handles variations in hand tilt
 
 **Result**: The same sign performed at different locations is now treated as the same pattern.
@@ -193,7 +195,7 @@ We rotate all points to establish a consistent orientation:
 ### Stage 3: Temporal Alignment
 
 > [!NOTE]
-> **Status**: NOT REQUIRED — Already handled by `video-collector` phase 
+> **Status**: NOT REQUIRED — Already handled by `video-collector` phase  
 > **Scope**: Applied per video/sequence  
 > **Purpose**: Handle speed and duration differences
 
@@ -315,4 +317,15 @@ By following this pipeline, we ensure that:
 - Training is numerically stable and efficient
 - Evaluation metrics reflect true generalization performance
 - The system is robust to variations in signer position, size, and camera setup
+
+---
+
+**References List**
+-
+Computer Vision Engineer. (2023). Sign Language Detection with Python and Scikit Learn | Landmark Detection | Computer Vision Tutorial. [Video] Available at: https://www.youtube.com/watch?v=MJCSjXepaAM&t=3148s [Accessed: 27 October 2025]
+
+Goncharov, I. (2022). Custom Hand Gesture Recognition with Hand Landmarks Using Google’s Mediapipe + OpenCV in Python. [Video] Available at: https://www.youtube.com/watch?v=a99p_fAr6e4&list=PL0FM467k5KSyt5o3ro2fyQGt-6zRkHXRv [Accessed: 27 October 2025]
+
+Renotte, N. (2021). Sign Language Detection using ACTION RECOGNITION with Python | LSTM Deep Learning Model. [Video] Available at: https://www.youtube.com/watch?v=doDUihpj6ro [Accessed: 21 October 2025]
+
 
