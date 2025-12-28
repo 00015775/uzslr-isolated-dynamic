@@ -106,6 +106,57 @@ For example, consider learning a dance move. We don't focus on where on stage it
 
 > _Direct quote_: "I used left-right hand, eye, nose, and lips landmarks."  
 
+As per the review done by Bergeron, M. (2024), the top winner used the 130 landmarks:
+> [!IMPORTANT]
+> The input to the solution are the following subset of 130 landmarks:
+>
+> 21 - key points from each hand
+> 6 -  pose key points from each arm
+> 76 - from the face (lips, nose, eyes)
+
+<details>
+<summary>
+<b>To see the exact landmarks, click here:</b>
+</summary>
+
+
+This below given coordinates are taken from Sohn, H. (2023) training notebook: https://www.kaggle.com/code/hoyso48/1st-place-solution-training?scriptVersionId=128283887&cellId=8
+
+
+```python
+NOSE=[
+    1,2,98,327
+]
+LNOSE = [98]
+RNOSE = [327]
+LIP = [ 0, 
+    61, 185, 40, 39, 37, 267, 269, 270, 409,
+    291, 146, 91, 181, 84, 17, 314, 405, 321, 375,
+    78, 191, 80, 81, 82, 13, 312, 311, 310, 415,
+    95, 88, 178, 87, 14, 317, 402, 318, 324, 308,
+]
+LLIP = [84,181,91,146,61,185,40,39,37,87,178,88,95,78,191,80,81,82]
+RLIP = [314,405,321,375,291,409,270,269,267,317,402,318,324,308,415,310,311,312]
+
+POSE = [500, 502, 504, 501, 503, 505, 512, 513]
+LPOSE = [513,505,503,501]
+RPOSE = [512,504,502,500]
+
+REYE = [
+    33, 7, 163, 144, 145, 153, 154, 155, 133,
+    246, 161, 160, 159, 158, 157, 173,
+]
+LEYE = [
+    263, 249, 390, 373, 374, 380, 381, 382, 362,
+    466, 388, 387, 386, 385, 384, 398,
+]
+
+LHAND = np.arange(468, 489).tolist()
+RHAND = np.arange(522, 543).tolist()
+```
+
+</details>
+
 ---
 
 ### Stage 2: Dataset Splitting
@@ -307,3 +358,4 @@ Renotte, N. (2021). _Sign Language Detection using ACTION RECOGNITION with Pytho
 
 Sohn, H. (2023). _1st place solution - 1DCNN combined with Transformer_. Available at: https://www.kaggle.com/competitions/asl-signs/writeups/hoyeol-sohn-1st-place-solution-1dcnn-combined-with [Accessed: 27 December 2025]
 
+Bergeron, M. (2024) Insightful Datasets for ASL recognition. Hackster.io. Available at: https://www.hackster.io/AlbertaBeef/insightful-datasets-for-asl-recognition-f786b9 [Accessed: 28 December 2025]
