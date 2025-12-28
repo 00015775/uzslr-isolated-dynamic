@@ -184,6 +184,10 @@ We apply the following transformations in sequence:
 - If this mean contains `NaN` values, replace them with 0.5.  
 - Subtract this mean position from all selected landmark coordinates (in every frame).  
 
+![normalization-reference-point](../docs/images/norm_reference_point(sohn-h).png)
+
+Kaggle (2023)._1st Place Solution: Google Isolated Sign Language Recognition with Hoyeol Sohn | Kaggle_. Available from: https://youtu.be/eH-z0b6lfxs?list=PLqFaTIg4myu-703qAHB7yHKUIKHxazMjY&t=252 (Accessed: 28 December 2025)
+
 **Effect:** Centers the sequence around the average nose position, making features position-independent (Sohn, 2023).
 
 > _Direct reference_: "For normalization, I used the 17th landmark located in the nose as a reference point, since it is usually located close to the center ([0.5, 0.5])."
