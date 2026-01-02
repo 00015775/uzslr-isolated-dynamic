@@ -1,0 +1,20 @@
+name: uzslr-signs
+channels:
+  - conda-forge
+  - defaults
+  - https://repo.anaconda.com/pkgs/main
+  - https://repo.anaconda.com/pkgs/r
+dependencies:
+  - python=3.9.23
+  - ipykernel
+  - pytorch=2.5.1
+  - torchvision=0.20.1
+  - jupyter
+  - pandas
+  - matplotlib
+  - numpy
+  - scikit-learn
+  - tqdm
+  - opencv
+  - pathlib
+prefix: /opt/anaconda3/envs/uzslr-signs
