@@ -10,11 +10,11 @@ dependencies:
   - pytorch=2.5.1
   - torchvision=0.20.1
   - jupyter
-  - pandas
-  - matplotlib
-  - numpy
-  - scikit-learn
-  - tqdm
+  - pandas=2.3.1
+  - matplotlib=3.9.4
+  - numpy=2.0.2
+  - scikit-learn=1.6.1
+  - tqdm=4.67.1
   - opencv
-  - pathlib
+  - pathlib=1.0.1
 prefix: /opt/anaconda3/envs/uzslr-signs
