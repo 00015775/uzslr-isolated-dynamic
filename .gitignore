@@ -13,6 +13,7 @@ env/
 .vscode/
 Data_Numpy_Arrays_RSL_UzSL/
 data/
+fake_data/
 # C extensions
 *.so
 
