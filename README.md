@@ -6,8 +6,8 @@ To achieve this, the repository provides a **full pipeline** that includes:
 
 1. **Video Collection** ([`video-collector`](./video-collector/))  
 2. **Dataset Preparation** ([`dataset-prep`](./dataset-prep/))  
-3. **Data Preprocessing** (_upcoming_)  
-4. **Model Training and Evaluation** (_future work_)
+3. **Data Preprocessing** ([`preprocessing`](./preprocessing/))  
+4. **Model Training and Evaluation** (_upcoming_)
 5. **Publication** (_future work: docs on `GitHub wiki` and paper in `LaTeX`_)
 
 > Note: `video-collector` and `dataset-prep` are foundational steps — they generate a clean, structured dataset that the model will later use.
@@ -29,9 +29,13 @@ conda activate video_collector_env
 > [!TIP]
 > This environment should be active for all scripts in `video-collector` and `dataset-prep`.
 >
-> The remaining steps may use their own dedicated conda environments to isolate dependencies, which will be provided in their respective folders once implemented.
+> The preprocessing and model training steps use their own dedicated conda environment to isolate dependencies, which will be provided in their respective folders once finalized.
 
 ---
+
+> [!NOTE]
+> All detailed references, instructions, and links are included in the `README` files of each individual step.  
+> This main `README` provides only a **high-level overview** of the full pipeline.
 
 ## Phase 1: Video Collection ([`video-collector`](./video-collector/))
 
@@ -115,15 +119,36 @@ python 04_check_frames_after_dataset_splits.py
 
 ---
 
-## Phase 3: Data Preprocessing (_upcoming_)
+## Phase 3: Data Preprocessing ([`preprocessing`](./preprocessing/notebooks/))
 
-This phase will handle normalization, augmentation, and feature engineering of the landmark data to prepare it for model training. Detailed instructions and scripts will be provided once this phase is finalized.
+**Purpose:** Prepare landmark sequences for model training by selecting relevant features, normalizing, and augmenting the data.  
 
+### Key Steps:
+- **Feature Selection:** Uses 118 key landmarks (hands, lips, eyes, nose) out of 543.  
+- **Preprocessing:** Centering, normalization, and temporal feature extraction (velocity + acceleration).  
+- **Augmentation:** Random temporal resampling, horizontal flip, spatial affine transforms, cropping, and masking.  
+- **Dataset Class:** `SignDataset` handles loading `.npy` frames, applying augmentations, and generating fixed-length sequences (`MAX_LEN = 32`).  
+- **Output:** Each sample has shape `(T, 708)` and batches have shape `(B, T, 708)` for PyTorch models.  
+
+> [!TIP] 
+> Full details, rationale, and step-by-step explanation can be found in [`preprocessing/README.md`](./preprocessing/README.md)
+
+
+> [!WARNING]
+> While `video-collector` and `dataset-prep` use their own dedicated environment ([`environment-video-collector.yml`](./video-collector/environment-video-collector.yml)),  
+> the preprocessing and upcoming model training steps use a separate environment called `uzslr-signs`.  
+>
+> Currently, the `uzslr-signs` environment is not finalized. Two temporary files exist:
+> 1. `conda_deps_from_history.yml` — only includes explicitly installed `conda` packages, no `pip` packages.  
+> 2. `uzslr_environments_with_hash.yml` — includes both `conda` and `pip` packages, but contains build variant hashes, which makes it less portable across different OS/machines.
+>
+> A final [`environment-uzslr-signs.yml`](environment-uzslr-signs.yml) will be created after model training is completed.  
+> For now, the environment contains only the packages required for **preprocessing**, and it will be expanded later for model training and evaluation.
 
 ---
 
 
-## Phase 4: Model Training and Evaluation (_future work_)
+## Phase 4: Model Training and Evaluation (_upcoming_)
 
 This phase will focus on training and evaluating machine learning models for **isolated dynamic Uzbek Sign Language recognition** using the prepared and preprocessed landmark dataset.
 
