@@ -148,8 +148,85 @@ The `Preprocess` class handles feature selection, normalization, and temporal fe
 Complete preprocessing pipeline follows this sequence:
 
 <p align="center">
-  <img src="../docs/images/data_preprocess_augment_v1.png" alt="pipeline" width="600">
+  <img src="../docs/images/data_preprocess_augment_v1.png" alt="pipeline" width="450">
 </p>
+
+<details>
+<summary><i>To see PlantUML code, click here.</i></summary>
+
+## PlantUML code:
+
+```code
+@startuml
+top to bottom direction
+
+actor User
+
+component "Disk: *.npy files\nOne file = one frame\nShape per file: (1662,)\ndtype: float64 (numpy)" as Disk
+
+note right
+  Each repetition rep-X folder,
+  (stacked 32 .npy frames)
+  is treated as a single training sample.
+end note
+
+component "Dataset.__getitem__\n\nnp.stack([...])\nShape: (T, 1662)\ndtype: float32 (numpy)" as GetItem
+
+component "torch.from_numpy\nShape: (T, 1662)\ndtype: torch.float32\ndevice: CPU" as FromNumpy
+
+note right
+torch.float32 is chosen due to 
+MPS acceleration compatibility
+if used later, also takes less space
+compared to torch.float64
+end note
+
+component "Vectorized UNPACK\n\nface: (T, 468, 3)\npose: (T, 33, 3)   ← visibility DROPPED\nrh  : (T, 21, 3)\nlh  : (T, 21, 3)\n\nconcat → (T, 543, 3)\nvalues: (x, y, z)" as Unpack
+
+component "augment_fn\nInput: (T, 543, 3)\n\nresample        → T changes\nflip_lr         → x mirrored, hands swapped\ntemporal_crop   → T ≤ 32\nspatial_affine  → scale/shear/rotate/shift\nspatial_mask    → rectangular landmark dropout\n\nNo normalization here\nNo coordinate-range assumption\ndtype/device unchanged" as Augment
+
+note right
+temporal_mask is not included
+due to possibility of 
+introducing discountinities
+end note
+
+component "pad_or_truncate\nShape enforced: (32, 543, 3)\nPadding value: 0.0\ndtype: torch.float32\ndevice: CPU" as Pad
+
+component "Preprocess.forward\nInput: (32, 543, 3)\n\n1) Landmark selection\n→ keep 118 landmarks\nShape: (32, 118, 3)\n\n2) Drop z coordinate\n→ keep (x, y)\nShape: (32, 118, 2)\n\n3) Center normalization\n→ reference landmark (nose)\n→ global over time\n\n4) Standard deviation normalization\n→ std over (T, N)\n\n5) Temporal derivatives\nvelocity     dx   : (32, 118, 2)\nacceleration dx2  : (32, 118, 2)\n\n6) Flatten per frame\nframes : (32, 236)\ndx     : (32, 236)\ndx2    : (32, 236)\n\nconcat → (32, 708)\ndtype: torch.float32\ndevice: CPU" as Preprocess
+
+component "DataLoader batching\n\nx: (B, 32, 708)\ny: (B,)\ndtype: torch.float32 / torch.long\ndevice: CPU" as DataLoader
+
+component "→ fed into model\n(model may later move tensors to GPU)" as Model
+
+note right
+Final tensors entering the model:
+x:
+  shape  = (B, 32, 708)
+  dtype  = torch.float32
+  device = CPU (until model.to(device))
+
+y:
+  shape  = (B,)
+  dtype  = torch.long
+  device = CPU
+end note
+
+User --> Disk
+Disk --> GetItem
+GetItem --> FromNumpy
+FromNumpy --> Unpack
+Unpack --> Augment
+Augment --> Pad
+Pad --> Preprocess
+Preprocess --> DataLoader
+DataLoader --> Model
+
+@enduml
+
+```
+</details>
+
 
 ---
 
