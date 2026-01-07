@@ -148,7 +148,7 @@ The `Preprocess` class handles feature selection, normalization, and temporal fe
 Complete preprocessing pipeline follows this sequence:
 
 <p align="center">
-  <img src="../docs/images/data_preprocess_augment_v1.png" alt="pipeline" width="500">
+  <img src="../docs/images/data_preprocess_augment_v1.png" alt="pipeline" width="550">
 </p>
 
 <details>
@@ -266,8 +266,8 @@ DataLoader --> Model
       Full Body
     </td>
     <td>
-    <img src="../docs/gifs/pose.gif" alt="full-body" width="300"><br>
-      Pose
+    <img align="center" src="../docs/gifs/pose.gif" alt="full-body" width="300"><br>
+      Pose (<i>not used</i>)
     </td> 
   </tr>
 
