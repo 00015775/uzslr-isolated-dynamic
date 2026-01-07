@@ -226,6 +226,24 @@ DataLoader --> Model
 ```
 </details>
 
+### Overal picture:
+<pre>
+Filesystem
+ └── rep-XX/
+     └── 32 frames (.npy)
+
+Dataset[i]
+ ├── loads 32 frames
+ ├── x: (32, 708)
+ └── y: label 0-49 (int)
+
+DataLoader
+ ├── batch of repetitions
+ └── x: (B, 32, 708)
+
+Model
+ └── predicts ONE label per repetition, based on (32, 708) input
+</pre>
 
 ---
 
