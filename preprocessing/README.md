@@ -165,26 +165,26 @@ Complete preprocessing pipeline follows this sequence:
 <table>
   <tr>
     <td align="center">
-      <img src="../docs/gifs/right_hand.gif" alt="right-hand" width="200"><br>
+      <img src="../docs/gifs/right_hand.gif" alt="right-hand" width="250"><br>
       Right Hand
     </td>
     <td align="center">
-      <img src="../docs/gifs/left_hand.gif" alt="left-hand" width="200"><br>
+      <img src="../docs/gifs/left_hand.gif" alt="left-hand" width="250"><br>
       Left Hand
     </td>
     <td align="center">
-      <img src="../docs/gifs/both_hand.gif" alt="both-hand" width="200"><br>
+      <img src="../docs/gifs/both_hand.gif" alt="both-hand" width="250"><br>
       Both Hands
     </td>
   </tr>
 
   <tr>
     <td align="center">
-      <img src="../docs/gifs/face.gif" alt="face" width="200"><br>
+      <img src="../docs/gifs/face.gif" alt="face" width="250"><br>
       Face
     </td>
     <td align="center">
-      <img src="../docs/gifs/full_body.gif" alt="full-body" width="200"><br>
+      <img src="../docs/gifs/full_body.gif" alt="full-body" width="250"><br>
       Full Body
     </td>
     <td></td> 
@@ -192,15 +192,15 @@ Complete preprocessing pipeline follows this sequence:
 
   <tr>
     <td align="center">
-      <img src="../docs/gifs/both_eyes.gif" alt="both-eyes" width="200"><br>
+      <img src="../docs/gifs/both_eyes.gif" alt="both-eyes" width="250"><br>
       Eyes
     </td>
     <td align="center">
-      <img src="../docs/gifs/lip.gif" alt="lips" width="200"><br>
+      <img src="../docs/gifs/lip.gif" alt="lips" width="250"><br>
       Lips
     </td>
     <td align="center">
-      <img src="../docs/gifs/nose.gif" alt="nose" width="200"><br>
+      <img src="../docs/gifs/nose.gif" alt="nose" width="250"><br>
       Nose
     </td>
   </tr>
