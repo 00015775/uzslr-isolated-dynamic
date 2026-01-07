@@ -119,7 +119,7 @@ python 04_check_frames_after_dataset_splits.py
 
 ---
 
-## Phase 3: Data Preprocessing ([`preprocessing`](./preprocessing/notebooks/))
+## Phase 3: Data Preprocessing ([`preprocessing`](./preprocessing/))
 
 **Purpose:** Prepare landmark sequences for model training by selecting relevant features, normalizing, and augmenting the data.  
 
@@ -140,7 +140,7 @@ python 04_check_frames_after_dataset_splits.py
 >
 > Currently, the `uzslr-signs` environment is not finalized. Two temporary files exist:
 > 1. `conda_deps_from_history.yml` — only includes explicitly installed `conda` packages, no `pip` packages.  
-> 2. `uzslr_environments_with_hash.yml` — includes both `conda` and `pip` packages, but contains build variant hashes, which makes it less portable across different OS/machines.
+> 2. `uzslr_environments_with_hash.yml` — includes both `conda` and `pip` packages, but contains [`build variant hashes`](./REPRODUCIBILITY.md), which makes it less portable across different OS/machines.
 >
 > A final [`environment-uzslr-signs.yml`](environment-uzslr-signs.yml) will be created after model training is completed.  
 > For now, the environment contains only the packages required for **preprocessing**, and it will be expanded later for model training and evaluation.

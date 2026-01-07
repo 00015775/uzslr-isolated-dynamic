@@ -43,12 +43,12 @@ conda activate uzslr-signs
 
 Hence, for this project total of 118 landmarks out of 543 were chosen for this pipeline. 
 
-> NOSE: 4
-> LIP: 40
-> REYE: 16
-> LEYE: 16
-> RHAND: 21
-> LHAND: 21
+> NOSE: 4   
+> LIP: 40   
+> REYE: 16   
+> LEYE: 16   
+> RHAND: 21   
+> LHAND: 21   
 
 <details>
 <summary>
@@ -137,7 +137,7 @@ The `Preprocess` class handles feature selection, normalization, and temporal fe
   - `B` = batch size  
   - `T` = number of frames per sequence (`MAX_LEN`)  
   - `708` = features per frame (position + velocity + acceleration for 118 landmarks)  
-- **Finally:** The batch tensor is of type `torch.float32` and resides on **CPU** by default. Labels are returned as `torch.long` with `0-49` range
+- **Finally:** The batch tensor is of type `torch.float32` and resides on `CPU` by default. Labels are returned as `torch.long` with `0-49` range
 
 
 ---
@@ -146,10 +146,6 @@ The `Preprocess` class handles feature selection, normalization, and temporal fe
 ## Pipeline Summary
 
 Complete preprocessing pipeline follows this sequence:
-
-<pre>
-
-</pre>
 
 ![pipeline](../docs/images/data_preprocess_augment_v1.png)
 
@@ -170,15 +166,15 @@ Complete preprocessing pipeline follows this sequence:
 <table>
   <tr>
     <td align="center">
-      <img src="../docs/gifs/right_hand.gif" alt="right-hand" width="150"><br>
+      <img src="../docs/gifs/right_hand.gif" alt="right-hand" width="250"><br>
       Right Hand
     </td>
     <td align="center">
-      <img src="../docs/gifs/left_hand.gif" alt="left-hand" width="150"><br>
+      <img src="../docs/gifs/left_hand.gif" alt="left-hand" width="250"><br>
       Left Hand
     </td>
     <td align="center">
-      <img src="../docs/gifs/both_hand.gif" alt="both-hand" width="150"><br>
+      <img src="../docs/gifs/both_hand.gif" alt="both-hand" width="250"><br>
       Both Hands
     </td>
   </tr>
@@ -186,7 +182,7 @@ Complete preprocessing pipeline follows this sequence:
   <!-- Face row -->
   <tr>
     <td align="center">
-      <img src="../docs/gifs/face.gif" alt="face" width="150"><br>
+      <img src="../docs/gifs/face.gif" alt="face" width="250"><br>
       Face
     </td>
   </tr>
@@ -194,7 +190,7 @@ Complete preprocessing pipeline follows this sequence:
   <!-- Full body row -->
   <tr>
     <td align="center">
-      <img src="../docs/gifs/full_body.gif" alt="full-body" width="150"><br>
+      <img src="../docs/gifs/full_body.gif" alt="full-body" width="250"><br>
       Full Body
     </td>
   </tr>
@@ -202,15 +198,15 @@ Complete preprocessing pipeline follows this sequence:
   <!-- Eyes, lips, nose row -->
   <tr>
     <td align="center">
-      <img src="../docs/gifs/both_eyes.gif" alt="both-eyes" width="150"><br>
+      <img src="../docs/gifs/both_eyes.gif" alt="both-eyes" width="250"><br>
       Eyes
     </td>
     <td align="center">
-      <img src="../docs/gifs/lip.gif" alt="lips" width="150"><br>
+      <img src="../docs/gifs/lip.gif" alt="lips" width="250"><br>
       Lips
     </td>
     <td align="center">
-      <img src="../docs/gifs/nose.gif" alt="nose" width="150"><br>
+      <img src="../docs/gifs/nose.gif" alt="nose" width="250"><br>
       Nose
     </td>
   </tr>
