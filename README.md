@@ -145,6 +145,53 @@ python 04_check_frames_after_dataset_splits.py
 > A final [`environment-uzslr-signs.yml`](environment-uzslr-signs.yml) will be created after model training is completed.  
 > For now, the environment contains only the packages required for **preprocessing**, and it will be expanded later for model training and evaluation.
 
+<table>
+  <tr>
+    <td align="center">
+      <img src="docs/gifs/right_hand.gif" alt="right-hand" width="100"><br>
+      Right Hand
+    </td>
+    <td align="center">
+      <img src="docs/gifs/left_hand.gif" alt="left-hand" width="100"><br>
+      Left Hand
+    </td>
+    <td align="center">
+      <img src="docs/gifs/both_hand.gif" alt="both-hand" width="100"><br>
+      Both Hands
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="docs/gifs/face.gif" alt="face" width="100"><br>
+      Face
+    </td>
+    <td align="center">
+      <img src="docs/gifs/full_body.gif" alt="full-body" width="100"><br>
+      Full Body
+    </td>
+    <td align="center">
+    <img src="docs/gifs/pose.gif" alt="full-body" width="100"><br>
+      Pose (<i>not used</i>)
+    </td> 
+  </tr>
+
+  <tr>
+    <td align="center">
+      <img src="docs/gifs/both_eyes.gif" alt="both-eyes" width="100"><br>
+      Eyes
+    </td>
+    <td align="center">
+      <img src="docs/gifs/lip.gif" alt="lips" width="100"><br>
+      Lips
+    </td>
+    <td align="center">
+      <img src="docs/gifs/nose.gif" alt="nose" width="100"><br>
+      Nose
+    </td>
+  </tr>
+</table>
+
 ---
 
 
