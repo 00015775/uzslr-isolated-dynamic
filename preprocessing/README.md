@@ -265,8 +265,8 @@ DataLoader --> Model
       <img src="../docs/gifs/full_body.gif" alt="full-body" width="300"><br>
       Full Body
     </td>
-    <td>
-    <img align="center" src="../docs/gifs/pose.gif" alt="full-body" width="300"><br>
+    <td align="center">
+    <img src="../docs/gifs/pose.gif" alt="full-body" width="300"><br>
       Pose (<i>not used</i>)
     </td> 
   </tr>
