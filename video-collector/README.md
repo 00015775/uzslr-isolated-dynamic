@@ -30,7 +30,7 @@ It supports:
 |------|-------------|-----------|
 | **1. Signer Selection** | Choose or create `signerXX` | Type ID |
 | **2. Sign Word Selection** | Pick from numbered list (green = recorded) | Number / `a` / `b` |
-| **3. Recording** | Press `s` → countdown → record **32 frames** | `s` = again, `d` = done |
+| **3. Recording** | Press `s` -> countdown -> record **32 frames** | `s` = again, `d` = done |
 
 > **After 32 frames**, only then can you press `s` or `d`.
 
@@ -125,10 +125,10 @@ Press **s** in the camera window to start repetition 1 of **nima**
 
 [Camera shows: "Press 's' to start"]
 
-→ Press **s** → 5-second countdown → records 32 frames
+-> Press **s** -> 5-second countdown -> records 32 frames
 
 Finished repetition 1 for sign **nima**
-[s] Record another    [d] Done → back to list
+[s] Record another    [d] Done -> back to list
 </pre>
 
 ---
@@ -138,11 +138,11 @@ The [`video-collector/dataset-checks/`](./dataset-checks/) directory contains he
 
 Each script serves a specific purpose:
 
-- [**01_check_sign_count_per_signer.py**](./dataset-checks/01_check_sign_count_per_signer.py) → Checks that every signer folder contains the expected number of sign subfolders. Ensures no signs are missing per signer.
-- [**02_count_repetitions_per_sign.py**](./dataset-checks/02_count_repetitions_per_sign.py) → Counts all repetitions (`rep-*` folders) for each sign across all signers. Detects missing or extra repetitions.
-- [**03_check_rep_consistency.py**](./dataset-checks/03_check_rep_consistency.py) → Verifies that each repetition folder contains the same number of frames in both `landmarks/` and `videos/`. Ensures consistency between video and landmark data.
-- [**04_visualize_landmarks.py**](./dataset-checks/04_visualize_landmarks.py) → Loads a single `frame-XX.npy` file and renders its 3D landmarks using Plotly for quick visual inspection.
-- [**05_verify_npy_shapes.py**](./dataset-checks/05_verify_npy_shapes.py) → Confirms that every `.npy` file has the expected shape `(1662,)`. Detects corrupted or incorrect landmark files.
+- [**01_check_sign_count_per_signer.py**](./dataset-checks/01_check_sign_count_per_signer.py) -> Checks that every signer folder contains the expected number of sign subfolders. Ensures no signs are missing per signer.
+- [**02_count_repetitions_per_sign.py**](./dataset-checks/02_count_repetitions_per_sign.py) -> Counts all repetitions (`rep-*` folders) for each sign across all signers. Detects missing or extra repetitions.
+- [**03_check_rep_consistency.py**](./dataset-checks/03_check_rep_consistency.py) -> Verifies that each repetition folder contains the same number of frames in both `landmarks/` and `videos/`. Ensures consistency between video and landmark data.
+- [**04_visualize_landmarks.py**](./dataset-checks/04_visualize_landmarks.py) -> Loads a single `frame-XX.npy` file and renders its 3D landmarks using Plotly for quick visual inspection.
+- [**05_verify_npy_shapes.py**](./dataset-checks/05_verify_npy_shapes.py) -> Confirms that every `.npy` file has the expected shape `(1662,)`. Detects corrupted or incorrect landmark files.
 
 > [!CAUTION]
 > The `06_trash_unwanted_sign.py` script moves sign folders to the **macOS Trash**.  
@@ -150,7 +150,7 @@ Each script serves a specific purpose:
 > - **Backup your dataset** before running.  
 > - Running this script outside macOS, or in general, is **not recommended**.  
 > - For safety, consider writing your **own deletion script** for your OS.  
-> - [**06_trash_unwanted_sign.py**](./dataset-checks/06_trash_unwanted_sign.py) → Moves selected sign folders to the macOS Trash, allowing removal of unwanted signs without accidental data loss.
+> - [**06_trash_unwanted_sign.py**](./dataset-checks/06_trash_unwanted_sign.py) -> Moves selected sign folders to the macOS Trash, allowing removal of unwanted signs without accidental data loss.
 
 
 ## Customizing for Other Sign Languages
@@ -170,11 +170,11 @@ To customize:
 
 
 2. **Adjust recording parameters as needed:**  
-   - `VIDEO_DEVICE` → select the camera device (default is the MacOS main webcam).  
-   - `FPS` → frames per second (default: 30).  
-   - `FRAMES_PER_REP` → number of frames per repetition (default: 32).  
-   - `FRAME_WIDTH`, `FRAME_HEIGHT` → resolution of the recording (default: 1280, 720).
-   - `COUNTDOWN_SECONDS` → delay before recording starts (default: 2).
+   - `VIDEO_DEVICE` -> select the camera device (default is the MacOS main webcam).  
+   - `FPS` -> frames per second (default: 30).  
+   - `FRAMES_PER_REP` -> number of frames per repetition (default: 32).  
+   - `FRAME_WIDTH`, `FRAME_HEIGHT` -> resolution of the recording (default: 1280, 720).
+   - `COUNTDOWN_SECONDS` -> delay before recording starts (default: 2).
 
 3. **Optionally, change the dataset folder name by modifying:**  
 ```python

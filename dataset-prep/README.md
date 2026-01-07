@@ -145,8 +145,8 @@ python step01_reorganize_dataset.py
 ```
 
 4. Run the following dataset integrity checks defined in the [`dataset-prep/dataset-checks/`](./dataset-checks/) folder, in the provided order:
-   - [`01_check_frames.py`](./dataset-checks/01_check_frames.py) → ensures 32 frames per repetition.
-   - [`02_count_repetitions.py`](./dataset-checks/02_count_repetitions.py) → verifies total repetitions per sign.
+   - [`01_check_frames.py`](./dataset-checks/01_check_frames.py) -> ensures 32 frames per repetition.
+   - [`02_count_repetitions.py`](./dataset-checks/02_count_repetitions.py) -> verifies total repetitions per sign.
 ```shell
 python 01_check_frames.py
 
@@ -158,8 +158,8 @@ python 02_count_repetitions.py
 python step02_train_val_test_split.py
 ```
 6. Verify split integrity with:
-   - [`03_verify_dataset_splits.py`](./dataset-checks/03_verify_dataset_splits.py) → checks that all signs exist in every split.
-   - [`04_check_frames_after_dataset_splits.py`](./dataset-checks/04_check_frames_after_dataset_splits.py) → confirms 32 frames per repetition.
+   - [`03_verify_dataset_splits.py`](./dataset-checks/03_verify_dataset_splits.py) -> checks that all signs exist in every split.
+   - [`04_check_frames_after_dataset_splits.py`](./dataset-checks/04_check_frames_after_dataset_splits.py) -> confirms 32 frames per repetition.
 
 ```shell
 python 03_verify_dataset_splits.py
@@ -213,11 +213,19 @@ data/                                           # ~1.1 GB pre-split, ~2.2 GB pos
 ---
 
 ## Next Steps: Data Preprocessing
-<!-- Update this section when data-preprocessing is compeleted -->
 > **Note:** After completing `dataset-prep`, the next phase will be **data preprocessing**.  
 > At this stage, the dataset is properly organized, verified, and split, but **no preprocessing** has been applied yet.  
 
-Currently, there are only rough sketches of what data preprocessing will entail but the [issue #5](https://github.com/00015775/uzslr-isolated-dynamic/issues/5) is already open/created. Once the preprocessing scripts and workflow are finalized, this section will be updated and linked to the corresponding folder.  
+All preprocessing scripts, notebooks, and explanations are finalized and can be found in the [`preprocessing/`](../preprocessing/) folder. This includes:
+
+- Selection of 118 key landmarks (hands, lips, eyes, nose)  
+- Centering and normalization of landmarks  
+- Computation of temporal dynamics (velocity + acceleration)  
+- Data augmentation (temporal resampling, horizontal flips, affine transforms, cropping, and masking)  
+- Dataset class (`SignDataset`) with fixed-length sequences ready for model training
+
+> [!IMPORTANT]
+> The `uzslr-signs` conda environment defined in [`environment-uzslr-signs.yml`](../environment-uzslr-signs.yml) was used for preprocessing and will also be used for the upcoming model training and evaluation steps. 
 
 ---
 
@@ -235,8 +243,8 @@ Currently, there are only rough sketches of what data preprocessing will entail 
 ## Landmark values
 
 **Common for Face, Pose, and Hands:**
-- **X**: Normalized by image width → ideally in `[0.0, 1.0]` range (left to right).
-- **Y**: Normalized by image height → ideally in `[0.0, 1.0]` range (top to bottom).
+- **X**: Normalized by image width -> ideally in `[0.0, 1.0]` range (left to right).
+- **Y**: Normalized by image height -> ideally in `[0.0, 1.0]` range (top to bottom).
 In practice, values can slightly exceed `[0.0, 1.0]` (such as, >1.0 or <0.0) when the model extrapolates positions for partially occluded or out-of-frame body parts.
 
 **Z Coordinate (Depth):**
@@ -252,6 +260,37 @@ The visibility field (a value between `0.0 and 1.0`) indicates the model's estim
 
 - A high visibility (such as, close to 1.0) means the model is confident the point is directly observable.
 - A low visibility (such as, close to 0.0) means it's likely occluded or not visible, but the model still provides a predicted position based on context from the rest of the body (using its learned human pose priors).
+
+### However
+
+Even as per [mediapipe legacy solution](https://mediapipe.readthedocs.io/en/latest/solutions/hands.html#:~:text=across%20platforms/languages.-,multi_hand_landmarks,the%20same%20scale%20as%20x%20.) documentation, it says that `x, y` range is `[0.0, 1.0]`, after doing EDA with [`01_ak_exploratory_analysis.ipynb`](../preprocessing/notebooks/01_ak_exploratory_analysis.ipynb) notebook, is was found that the actual range is a bit off. Below are the summary statistics of `x, y, z, visibility` values:
+
+<pre>
+FACE:
+  x | median=0.51640  mean=0.51948  std=0.04189  min=0.00000  max=0.68396
+  y | median=0.27560  mean=0.27340  std=0.06691  min=0.00000  max=0.55402
+  z | median=-0.00162  mean=-0.00000  std=0.01432  min=-0.03617  max=0.07112
+NaNs: 0  Infs: 0
+
+POSE:
+  x | median=0.52310  mean=0.51998  std=0.09127  min=0.07840  max=0.94659
+  y | median=0.67478  mean=0.87216  std=0.64270  min=0.07762  max=2.45973
+  z | median=-0.30597  mean=-0.27760  std=0.33128  min=-1.64187  max=0.79222
+vis | median=0.00000  mean=0.16459  std=0.35400  min=0.00000  max=1.00000
+NaNs: 0  Infs: 0
+
+RIGHT HAND:
+  x | median=0.40161  mean=0.30028  std=0.22316  min=-0.02420  max=0.80179
+  y | median=0.47600  mean=0.40106  std=0.32348  min=-0.02748  max=1.22147
+  z | median=-0.00996  mean=-0.01646  std=0.01987  min=-0.25064  max=0.08678
+NaNs: 0  Infs: 0
+
+LEFT HAND:
+  x | median=0.52002  mean=0.38243  std=0.28093  min=0.00000  max=1.01732
+  y | median=0.47726  mean=0.40106  std=0.32397  min=-0.01870  max=1.21580
+  z | median=-0.00864  mean=-0.01594  std=0.02019  min=-0.22694  max=0.12182
+NaNs: 0  Infs: 0
+</pre>
 
 ---
 
@@ -273,7 +312,7 @@ One file corresponds to **one video frame**.
   `(1662,)`
 
 - **Dtype**:  
-  `float32` / `float64` (NumPy default)
+ `float64` (NumPy default)
 
 - **Total `frame-*.npy` files**:  
   `82816`
