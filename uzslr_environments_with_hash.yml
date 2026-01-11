@@ -200,7 +200,6 @@ dependencies:
   - nomkl=1.0=h5ca1d4c_0
   - notebook=7.4.5=pyhd8ed1ab_0
   - notebook-shim=0.2.4=pyhd8ed1ab_1
-  - numpy=2.0.2=py39h3ba1154_1
   - opencv=4.12.0=qt6_py39hb1f062c_600
   - openexr=3.3.5=haaeed0a_0
   - openh264=2.6.0=hb5b2745_0
@@ -305,4 +304,17 @@ dependencies:
   - zipp=3.23.0=pyhd8ed1ab_0
   - zstandard=0.23.0=py39he7485ab_3
   - zstd=1.5.7=hbf9d68e_6
+  - pip:
+      - absl-py==2.3.1
+      - flatbuffers==25.12.19
+      - jax==0.4.30
+      - jaxlib==0.4.30
+      - mediapipe==0.10.21
+      - ml-dtypes==0.5.4
+      - numpy==1.26.4
+      - opencv-contrib-python==4.11.0.86
+      - opt-einsum==3.4.0
+      - protobuf==4.25.8
+      - sentencepiece==0.2.1
+      - sounddevice==0.5.3
 prefix: /opt/anaconda3/envs/uzslr-signs

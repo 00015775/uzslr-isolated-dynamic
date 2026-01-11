@@ -1,14 +1,21 @@
 # Uzbek Sign Language Recognition (UzSLR)
 
+<p align="center">
+  <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="600">
+</p>
+
 This repository aims to develop a **machine learning model for recognizing isolated dynamic Uzbek Sign Language (UzSL)** from video data.  
 
 To achieve this, the repository provides a **full pipeline** that includes:
 
-1. **Video Collection** ([`video-collector`](./video-collector/))  
-2. **Dataset Preparation** ([`dataset-prep`](./dataset-prep/))  
-3. **Data Preprocessing** ([`preprocessing`](./preprocessing/))  
-4. **Model Training and Evaluation** (_upcoming_)
-5. **Publication** (_future work: docs on `GitHub wiki` and paper in `LaTeX`_)
+| # | Pipeline Stage | Conda Environment |
+|---|---------------|-------------------|
+| 1 | **Video Collection** ([`video-collector`](./video-collector/)) | [`video_collector_env`](./video-collector/environment-video-collector.yml) |
+| 2 | **Dataset Preparation** ([`dataset-prep`](./dataset-prep/)) | [`video_collector_env`](./video-collector/environment-video-collector.yml) |
+| 3 | **Data Preprocessing** ([`preprocessing`](./preprocessing/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
+| 4 | **Model Training and Evaluation** ([`modeling`](./modeling/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
+| 5 | **Real-Time Inferencing** ([`inferencing`](./inferencing/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
+
 
 > Note: `video-collector` and `dataset-prep` are foundational steps — they generate a clean, structured dataset that the model will later use.
 
@@ -29,7 +36,7 @@ conda activate video_collector_env
 > [!TIP]
 > This environment should be active for all scripts in `video-collector` and `dataset-prep`.
 >
-> The preprocessing and model training steps use their own dedicated conda environment to isolate dependencies, which will be provided in their respective folders once finalized.
+> The `preprocessing`, `modeling` and `inferencing` steps use their own dedicated conda environment [`uzslr-signs`](./environment-uzslr-signs.yml) to isolate dependencies.
 
 ---
 
@@ -121,6 +128,8 @@ python 04_check_frames_after_dataset_splits.py
 
 ## Phase 3: Data Preprocessing ([`preprocessing`](./preprocessing/))
 
+> **Note:** The preprocessing pipeline was logically adapted from Sohn, H. (2023). See **Acknowledgements** section at the bottom.
+
 **Purpose:** Prepare landmark sequences for model training by selecting relevant features, normalizing, and augmenting the data.  
 
 ### Key Steps:
@@ -130,20 +139,20 @@ python 04_check_frames_after_dataset_splits.py
 - **Dataset Class:** `SignDataset` handles loading `.npy` frames, applying augmentations, and generating fixed-length sequences (`MAX_LEN = 32`).  
 - **Output:** Each sample has shape `(T, 708)` and batches have shape `(B, T, 708)` for PyTorch models.  
 
+### Conda Environment
+```shell
+# create and activate the environment (shared with modeling and inferencing)
+conda env create -f environment-uzslr-signs.yml
+conda activate uzslr-signs
+```
+
 > [!TIP] 
 > Full details, rationale, and step-by-step explanation can be found in [`preprocessing/README.md`](./preprocessing/README.md)
 
 
-> [!WARNING]
+> [!IMPORTANT]
 > While `video-collector` and `dataset-prep` use their own dedicated environment ([`environment-video-collector.yml`](./video-collector/environment-video-collector.yml)),  
-> the preprocessing and upcoming model training steps use a separate environment called `uzslr-signs`.  
->
-> Currently, the `uzslr-signs` environment is not finalized. Two temporary files exist:
-> 1. `conda_deps_from_history.yml` — only includes explicitly installed `conda` packages, no `pip` packages.  
-> 2. `uzslr_environments_with_hash.yml` — includes both `conda` and `pip` packages, but contains [`build variant hashes`](./REPRODUCIBILITY.md), which makes it less portable across different OS/machines.
->
-> A final [`environment-uzslr-signs.yml`](environment-uzslr-signs.yml) will be created after model training is completed.  
-> For now, the environment contains only the packages required for **preprocessing**, and it will be expanded later for model training and evaluation.
+> the [`preprocessing`](./preprocessing/), [`modeling`](./modeling/) and [`inferencing`](./inferencing/) steps use a single separate environment called [`uzslr-signs`](./environment-uzslr-signs.yml).  
 
 <div align="center">
 <table>
@@ -198,15 +207,102 @@ python 04_check_frames_after_dataset_splits.py
 ---
 
 
-## Phase 4: Model Training and Evaluation (_upcoming_)
+## Phase 4: Model Training and Evaluation ([`modeling`](./modeling/))
 
-This phase will focus on training and evaluating machine learning models for **isolated dynamic Uzbek Sign Language recognition** using the prepared and preprocessed landmark dataset.
+> **Note:** The modeling pipeline was logically adapted from Sohn, H. (2023). See **Acknowledgements** section at the bottom.
+
+**Purpose:** Train and evaluate a hybrid CNN-Transformer model for recognizing 50 Uzbek sign language classes.
+
+### Key Features:
+- **Hybrid architecture:** Combines causal convolutions with transformer blocks for temporal modeling.
+- **Input/Output:** Takes preprocessed landmarks `(batch, 32, 708)` and outputs logits `(batch, 50)`.
+- **Training:** AdamW optimizer with early stopping, achieves ~92% validation accuracy and ~87% test accuracy.
+- **Model sizes:** Base model (dim=192) and large model (dim=384).
+
+### Conda Environment
+```shell
+conda activate uzslr-signs
+```
+
+> [!NOTE]
+> The `uzslr-signs` environment is used across **preprocessing**, **modeling**, and **inferencing** for consistency.
+
+### Run Training
+
+Training is performed in Jupyter notebooks with experimentations (_around 30 minutes with MPS acceleration_):
+
+```shell
+cd ./modeling/notebooks
+jupyter notebook 03_ak_model_dev_v1.ipynb
+```
+
+### Model Outputs
+- `best_model.pth`: model with best validation accuracy
+- `checkpoint.pth`: latest training checkpoint for resuming
+
+> [!TIP]
+> For architecture details, feature engineering, and training configuration, see [`modeling/README.md`](./modeling/README.md)
+
+---
+
+## Phase 5: Real-Time Inference ([`inferencing`](./inferencing/))
+
+**Purpose:** Deploy the trained model for real-time sign language recognition using a webcam.
+
+### Key Features:
+- Real-time inference with automatic hand detection
+- No manual triggering required (hands-free operation)
+- Displays predicted sign with confidence score
+- Cross-platform support (MPS/CUDA/CPU)
+
+### Run Inference
+
+```shell
+cd ./inferencing
+python inference04_main.py
+```
+
+> [!TIP]
+> For setup instructions and troubleshooting, see [`inferencing/README.md`](./inferencing/README.md)
 
 
 ---
 
 
-## Phase 5: Publication (_future work: docs on `GitHub wiki` and paper in `LaTeX`_)
+## Phase 6: Publication (_upcoming: docs on `GitHub wiki` and paper in `LaTeX`_)
 
 This phase will focus on documenting and analyzing the results of the project. The aim is to contribute to the broader sign language recognition and low-resource language research communities.
+
+
+---
+
+## Acknowledgements
+
+The preprocessing and modeling pipelines in this project are **logical adaptations** of the work by **Sohn, H. (2023)**, specifically the *Hoyso48* training notebook.  
+
+- This project **does not directly copy** the original code.  
+- The original notebook was implemented in **TensorFlow** and used a different dataset structure.  
+- In this repository, the pipelines have been **adapted to PyTorch** and modified to work with a **low-resource Uzbek Sign Language dataset**, including changes in folder organization and preprocessing steps.  
+
+Reference and original work:  
+[Sohn, H., 2023 – Hoyso48 Notebook](https://www.kaggle.com/code/hoyso48/1st-place-solution-training)
+
+
+
+**References List**
+-
+
+Bergeron, M. (2024). Insightful Datasets for ASL recognition. Hackster.io. Available at: https://www.hackster.io/AlbertaBeef/insightful-datasets-for-asl-recognition-f786b9 [Accessed: 28 December 2025]
+
+Computer Vision Engineer. (2023). _Sign Language Detection with Python and Scikit Learn | Landmark Detection | Computer Vision Tutorial_. [Video] Available at: https://www.youtube.com/watch?v=MJCSjXepaAM&t=3148s [Accessed: 27 October 2025]
+
+Cookiecutter (n.d.). _Using the template – Cookiecutter Data Science_. Available at: https://cookiecutter-data-science.drivendata.org/using-the-template/ (Accessed: 2 January 2026)
+
+Goncharov, I. (2022). _Custom Hand Gesture Recognition with Hand Landmarks Using Google’s Mediapipe + OpenCV in Python_. [Video] Available at: https://www.youtube.com/watch?v=a99p_fAr6e4&list=PL0FM467k5KSyt5o3ro2fyQGt-6zRkHXRv [Accessed: 27 October 2025]
+
+Hoyso48 (2023). _1st place solution ‑ training [Kaggle notebook]_. Available at: https://www.kaggle.com/code/hoyso48/1st-place-solution-training?scriptVersionId=128283887&cellId=8 (Accessed: 27 December 2025)
+
+Renotte, N. (2021). _Sign Language Detection using ACTION RECOGNITION with Python | LSTM Deep Learning Model_. [Video] Available at: https://www.youtube.com/watch?v=doDUihpj6ro [Accessed: 21 October 2025]
+
+Sohn, H. (2023). _1st place solution - 1DCNN combined with Transformer_. Available at: https://www.kaggle.com/competitions/asl-signs/writeups/hoyeol-sohn-1st-place-solution-1dcnn-combined-with [Accessed: 27 December 2025]
 

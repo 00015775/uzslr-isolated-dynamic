@@ -23,17 +23,13 @@
 
 ### Conda environment
 
+This `uzslr-signs` conda environment is also used in [`modeling`](../modeling/) and [`inferencing`](../inferencing/).
+
 ```shell
 # Create and activate the environment
 conda env create -f environment-uzslr-signs.yml
 conda activate uzslr-signs
 ```
-
-> [!IMPORTANT]
-> This environment, `uzslr-signs`, is currently configured to support all preprocessing steps.
-> It will also be used for model training and evaluation once finalized.
-> The [`environment-uzslr-signs.yml`](../environment-uzslr-signs.yml) will be expanded as new dependencies are added during the model development phase.
-
 
 ### Stage 1: Feature Selection
 
