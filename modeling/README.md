@@ -1,6 +1,9 @@
 # Model Development
 
 ## Conda environment
+
+This model code uses the same conda environment as [`preprocessing`](../preprocessing/).
+
 ```shell
 # create and activate the environment
 conda env create -f environment-uzslr-signs.yml
