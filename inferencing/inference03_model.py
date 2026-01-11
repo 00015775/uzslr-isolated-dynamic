@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 # simply copied the model code experimented on 03_ak_model_dev_v1.ipynb
+# but in ECA lazy initiliaztion for self.conv is NOT used, the rest is the same
 class ECA(nn.Module):
     def __init__(self, kernel_size=5):
         super().__init__()
