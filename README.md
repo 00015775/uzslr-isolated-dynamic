@@ -1,7 +1,7 @@
 # Uzbek Sign Language Recognition (UzSLR)
 
 <p align="center">
-  <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="600">
+  <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="800">
 </p>
 
 This repository aims to develop a **machine learning model for recognizing isolated dynamic Uzbek Sign Language (UzSL)** from video data.  
@@ -128,6 +128,8 @@ python 04_check_frames_after_dataset_splits.py
 
 ## Phase 3: Data Preprocessing ([`preprocessing`](./preprocessing/))
 
+> **Note:** The preprocessing pipeline was logically adapted from Sohn, H. (2023). See **Acknowledgements** section at the bottom.
+
 **Purpose:** Prepare landmark sequences for model training by selecting relevant features, normalizing, and augmenting the data.  
 
 ### Key Steps:
@@ -207,6 +209,8 @@ conda activate uzslr-signs
 
 ## Phase 4: Model Training and Evaluation ([`modeling`](./modeling/))
 
+> **Note:** The modeling pipeline was logically adapted from Sohn, H. (2023). See **Acknowledgements** section at the bottom.
+
 **Purpose:** Train and evaluate a hybrid CNN-Transformer model for recognizing 50 Uzbek sign language classes.
 
 ### Key Features:
@@ -268,4 +272,37 @@ python inference04_main.py
 ## Phase 6: Publication (_upcoming: docs on `GitHub wiki` and paper in `LaTeX`_)
 
 This phase will focus on documenting and analyzing the results of the project. The aim is to contribute to the broader sign language recognition and low-resource language research communities.
+
+
+---
+
+## Acknowledgements
+
+The preprocessing and modeling pipelines in this project are **logical adaptations** of the work by **Sohn, H. (2023)**, specifically the *Hoyso48* training notebook.  
+
+- This project **does not directly copy** the original code.  
+- The original notebook was implemented in **TensorFlow** and used a different dataset structure.  
+- In this repository, the pipelines have been **adapted to PyTorch** and modified to work with a **low-resource Uzbek Sign Language dataset**, including changes in folder organization and preprocessing steps.  
+
+Reference and original work:  
+[Sohn, H., 2023 – Hoyso48 Notebook](https://www.kaggle.com/code/hoyso48/1st-place-solution-training)
+
+
+
+**References List**
+-
+
+Bergeron, M. (2024). Insightful Datasets for ASL recognition. Hackster.io. Available at: https://www.hackster.io/AlbertaBeef/insightful-datasets-for-asl-recognition-f786b9 [Accessed: 28 December 2025]
+
+Computer Vision Engineer. (2023). _Sign Language Detection with Python and Scikit Learn | Landmark Detection | Computer Vision Tutorial_. [Video] Available at: https://www.youtube.com/watch?v=MJCSjXepaAM&t=3148s [Accessed: 27 October 2025]
+
+Cookiecutter (n.d.). _Using the template – Cookiecutter Data Science_. Available at: https://cookiecutter-data-science.drivendata.org/using-the-template/ (Accessed: 2 January 2026)
+
+Goncharov, I. (2022). _Custom Hand Gesture Recognition with Hand Landmarks Using Google’s Mediapipe + OpenCV in Python_. [Video] Available at: https://www.youtube.com/watch?v=a99p_fAr6e4&list=PL0FM467k5KSyt5o3ro2fyQGt-6zRkHXRv [Accessed: 27 October 2025]
+
+Hoyso48 (2023). _1st place solution ‑ training [Kaggle notebook]_. Available at: https://www.kaggle.com/code/hoyso48/1st-place-solution-training?scriptVersionId=128283887&cellId=8 (Accessed: 27 December 2025)
+
+Renotte, N. (2021). _Sign Language Detection using ACTION RECOGNITION with Python | LSTM Deep Learning Model_. [Video] Available at: https://www.youtube.com/watch?v=doDUihpj6ro [Accessed: 21 October 2025]
+
+Sohn, H. (2023). _1st place solution - 1DCNN combined with Transformer_. Available at: https://www.kaggle.com/competitions/asl-signs/writeups/hoyeol-sohn-1st-place-solution-1dcnn-combined-with [Accessed: 27 December 2025]
 
