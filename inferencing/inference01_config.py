@@ -1,7 +1,7 @@
 import torch
 
 # model settings
-MODEL_PATH = "../modeling/notebooks/best_model.pth"  # use best_model.pth for inference
+MODEL_PATH = "best_model.pth"  # use best_model.pth for inference
 MAX_LEN = 32
 CHANNELS = 708
 NUM_CLASSES = 50
