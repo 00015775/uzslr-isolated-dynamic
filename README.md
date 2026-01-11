@@ -1,7 +1,7 @@
 # Uzbek Sign Language Recognition (UzSLR)
 
 <p align="center">
-  <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="600">
+  <img src="docs/gifs/inference_usage_small.gif" alt="Inference Demo" width="600">
 </p>
 
 This repository aims to develop a **machine learning model for recognizing isolated dynamic Uzbek Sign Language (UzSL)** from video data.  
