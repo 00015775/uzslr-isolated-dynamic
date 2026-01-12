@@ -265,11 +265,42 @@ python inference04_main.py
 > [!TIP]
 > For setup instructions and troubleshooting, see [`inferencing/README.md`](./inferencing/README.md)
 
+---
+
+## Dataset Preview: 50 Uzbek Sign Language Signs
+
+This folder includes a visual preview of all **50 Uzbek Sign Language (UzSL) signs** supported by the model.
+
+The preview is provided so that users can:
+- Understand how each sign is performed
+- Perform the same sign themselves during real-time inference
+- Qualitatively verify that the model works as intended
+
+The preview is located in [`show-50-signs/`](./show-50-signs/) and is organized as:
+
+<pre>
+show-50-signs/
+├── README.md
+└── signs/
+    └── sign_name/
+        ├── rep_000.gif
+        └── rep_001.gif
+</pre>
+
+Each sign contains **two repetitions**, rendered as **animated GIFs** from MediaPipe Holistic landmarks.
+
+For **privacy and ethical considerations**, the individuals from *School No. 101* are **not shown in these GIF previews**.  
+All visual demonstrations in `show-50-signs/` were performed exclusively by the **author of this project**.
+
+> Note: These GIFs are for visualization and user reference only.  
+> The model is trained exclusively on `.npy` landmark sequences generated during the data collection and preprocessing stages.
+
+
 
 ---
 
 
-## Phase 6: Publication (_upcoming: docs on `GitHub wiki` and paper in `LaTeX`_)
+## Publication (_upcoming: docs on `GitHub wiki` and paper in `LaTeX`_)
 
 This phase will focus on documenting and analyzing the results of the project. The aim is to contribute to the broader sign language recognition and low-resource language research communities.
 
@@ -287,7 +318,11 @@ The preprocessing and modeling pipelines in this project are **logical adaptatio
 Reference and original work:  
 [Sohn, H., 2023 – Hoyso48 Notebook](https://www.kaggle.com/code/hoyso48/1st-place-solution-training)
 
+---
 
+The author would like to express sincere gratitude to **School No. 101 in Tashkent** for their cooperation and support during the data collection phase of this project.  
+A total of **10 participants**, along with **one teacher**, contributed by assisting with sign translations, clarifying sign meanings, and providing contextual explanations of Uzbek Sign Language.  
+All participating individuals were **fully informed about the project**, and **written consent forms were obtained** from all 10 participants prior to data collection.
 
 **References List**
 -

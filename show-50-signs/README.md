@@ -1,6 +1,6 @@
 # Uzbek Sign Language (UzSL) Dataset
 
-This repository contains visual demonstrations of 50 Uzbek Sign Language signs with MediaPipe landmarks.
+This folder contains visual demonstrations of 50 Uzbek Sign Language signs with MediaPipe landmarks.
 
 ---
 
