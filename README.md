@@ -1,9 +1,9 @@
 # Uzbek Sign Language Recognition (UzSLR)
 
 > **Quick Start:**  
-> If you want to run the **inferencing** process locally without reading through the entire documentation, watch this **[Video Tutorial for Inferencing](youtubelinkhere)** to get started right away.  
+> If you want to run the **inferencing** process locally without reading through the entire documentation, watch this **[Video Tutorial for Inferencing](https://youtu.be/CV5R3Xx14So)** to get started right away.  
 >  
-> For those interested in **video collection** and understanding the full pipeline, watch this **[Video Tutorial for Video Collection](youtubelinkhere)**.
+> For those interested in **video collection** and understanding the full pipeline, watch this **[Video Tutorial for Video Collection](https://youtu.be/3A1UdCw6Yj4)**.
 
 
 <p align="center">
@@ -87,7 +87,7 @@ python mod05_main.py
 
 To learn how to collect video data and set up the environment for recording locally, follow this tutorial:
 
-[](youtubelinkhere)
+**[Video Tutorial for Video Collection](https://youtu.be/3A1UdCw6Yj4)**
 
 The video covers:
 - How to set up and run video collection for both Unix-like systems and Windows.
@@ -312,7 +312,7 @@ conda activate uzslr-signs
 
 If you're unsure how to set up and run the inferencing locally, check out this step-by-step video tutorial:
 
-[](youtubelink here)
+**[Video Tutorial for Inferencing](https://youtu.be/CV5R3Xx14So)**
 
 The tutorial covers:
 - How to set up the environment for both Unix-like systems and Windows.
