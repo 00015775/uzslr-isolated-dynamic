@@ -1,5 +1,11 @@
 # Uzbek Sign Language Recognition (UzSLR)
 
+> **Quick Start:**  
+> If you want to run the **inferencing** process locally without reading through the entire documentation, watch this **[Video Tutorial for Inferencing](youtubelinkhere)** to get started right away.  
+>  
+> For those interested in **video collection** and understanding the full pipeline, watch this **[Video Tutorial for Video Collection](youtubelinkhere)**.
+
+
 <p align="center">
   <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="600">
 </p>
@@ -22,6 +28,8 @@ To achieve this, the repository provides a **full pipeline** that includes:
 ---
 
 ## Conda Environments
+
+Anaconda: `conda 24.11.3`
 
 To ensure reproducibility, we use a dedicated environment for `video-collector` and `dataset-prep`:
 
@@ -74,6 +82,79 @@ python mod05_main.py
 
 > [!TIP]
 > For the full understanding of how to run or modify `video-collector` and `video-collector/dataset-checks/`, it is **strongly advised to read** [`video-collector/README.md`](./video-collector/README.md)
+
+### Video Tutorial for Video Collection
+
+To learn how to collect video data and set up the environment for recording locally, follow this tutorial:
+
+[](youtubelinkhere)
+
+The video covers:
+- How to set up and run video collection for both Unix-like systems and Windows.
+- Step-by-step guidance to collect the necessary data for training the model.
+- Configurations and Troubleshooting.
+
+<details>
+<summary><b>To see commands, click here:</b></summary>
+
+### Unix-like system
+Steps:
+1. 
+
+```shell
+git clone https://github.com/00015775/uzslr-isolated-dynamic
+```
+
+2. 
+```shell
+cd uzslr-isolated-dynamic
+```
+3. 
+```shell
+cd ./video-collector
+```
+4.
+```shell 
+conda env create -f environment-video-collector.yml
+```
+5. 
+```shell
+conda activate video_collector_env
+```
+6. 
+```shell
+python mod05_main.py
+```
+
+### Windows
+Steps:
+1. 
+```shell
+git clone https://github.com/00015775/uzslr-isolated-dynamic
+```
+2. 
+```shell
+Set-Location -Path .\uzslr-isolated-dynamic
+```
+3. 
+```shell
+Set-Location .\video-collector
+```
+4. 
+```shell
+conda env create -f environment-video-collector.yml
+```
+5.
+```shell 
+conda activate video_collector_env
+```
+6. 
+```shell
+python mod05_main.py
+```
+
+</details>
+
 
 ---
 
@@ -226,6 +307,75 @@ conda activate uzslr-signs
 
 > [!NOTE]
 > The `uzslr-signs` environment is used across **preprocessing**, **modeling**, and **inferencing** for consistency.
+
+### Video Tutorial for Inferencing
+
+If you're unsure how to set up and run the inferencing locally, check out this step-by-step video tutorial:
+
+[](youtubelink here)
+
+The tutorial covers:
+- How to set up the environment for both Unix-like systems and Windows.
+- Running inference with real-time recognition.
+
+<details>
+<summary><b>To see commands, click here:</b></summary>
+
+### Unix-like system
+Steps:
+1. 
+```shell
+git clone https://github.com/00015775/uzslr-isolated-dynamic
+```
+2. 
+```shell
+cd uzslr-isolated-dynamic
+```
+3. 
+```shell
+conda env create -f environment-uzslr-signs.yml
+```
+4. 
+```shell
+conda activate uzslr-signs
+```
+5. 
+```shell
+cd ./inferencing
+```
+6. 
+```shell
+python inference04_main.py
+```
+
+### Windows
+Steps:
+1. 
+```shell
+git clone https://github.com/00015775/uzslr-isolated-dynamic
+```
+2. 
+```shell
+Set-Location -Path .\uzslr-isolated-dynamic
+```
+3. 
+```shell
+conda env create -f environment-uzslr-signs.yml
+```
+4. 
+```shell
+conda activate uzslr-signs
+```
+5. 
+```shell
+Set-Location -Path .\inferencing
+```
+6. 
+```shell
+python inference04_main.py
+```
+
+</details>
 
 ### Run Training
 
