@@ -102,7 +102,7 @@ Steps:
 1. 
 
 ```shell
-git clone https://github.com/00015775/uzslr-isolated-dynamic
+git clone https://github.com/00015775/uzslr-isolated-dynamic.git
 ```
 
 2. 
@@ -130,7 +130,7 @@ python mod05_main.py
 Steps:
 1. 
 ```shell
-git clone https://github.com/00015775/uzslr-isolated-dynamic
+git clone https://github.com/00015775/uzslr-isolated-dynamic.git
 ```
 2. 
 ```shell
@@ -325,7 +325,7 @@ The tutorial covers:
 Steps:
 1. 
 ```shell
-git clone https://github.com/00015775/uzslr-isolated-dynamic
+git clone https://github.com/00015775/uzslr-isolated-dynamic.git
 ```
 2. 
 ```shell
@@ -352,7 +352,7 @@ python inference04_main.py
 Steps:
 1. 
 ```shell
-git clone https://github.com/00015775/uzslr-isolated-dynamic
+git clone https://github.com/00015775/uzslr-isolated-dynamic.git
 ```
 2. 
 ```shell
