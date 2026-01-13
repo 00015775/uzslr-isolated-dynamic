@@ -223,11 +223,14 @@ class SignRecognizer:
             
             cv2.imshow('sign recognition', frame)
             
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(10) & 0xFF == ord('q'):
                 break
         
         cap.release()
+        cv2.destroyWindow('sign recognition')  
+        cv2.waitKey(1)  
         cv2.destroyAllWindows()
+        cv2.waitKey(1)  
         self.holistic.close()
 
 
