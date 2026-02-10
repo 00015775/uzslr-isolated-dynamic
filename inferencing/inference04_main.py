@@ -5,11 +5,19 @@ import mediapipe as mp
 from collections import deque
 import time
 
+# for mlx version of Qwen2.5
+from mlx_lm import load, generate
+
 from inference01_config import (
     MODEL_PATH, MAX_LEN, CHANNELS, NUM_CLASSES, MODEL_DIM,
     VIDEO_DEVICE, FRAME_WIDTH, FRAME_HEIGHT, MP_CONFIDENCE,
     BUFFER_SIZE, HANDS_REQUIRED, HAND_DISAPPEAR_TOLERANCE,
-    DEFAULT_SIGNS, get_device
+    DEFAULT_SIGNS, get_device,
+    # LLM configs
+    LLM_MODEL, LLM_MAX_TOKENS, LLM_TEMPERATURE,
+    MIN_SIGNS_FOR_SENTENCE, MAX_SIGNS_PER_SENTENCE,
+    SIGN_STABILITY_THRESHOLD, SIGN_CONFIDENCE_THRESHOLD,
+    SYSTEM_PROMPT
 )
 from inference02_preprocess import Preprocess
 from inference03_model import SignLanguageModel
@@ -55,6 +63,17 @@ class SignRecognizer:
         self.current_prediction = None
         self.prediction_confidence = 0.0
         self.last_inference_time = 0
+
+        # LLM sentence buffer for collecting signs
+        self.sentence_buffer = []
+        self.last_k_predictions = deque(maxlen=SIGN_STABILITY_THRESHOLD + 1)
+        self.last_added_sign = None
+        
+        # LLM model
+        print("loading language model...")
+        self.llm_model, self.llm_tokenizer = load(LLM_MODEL)
+        print("language model ready")
+
         
     def extract_landmarks(self, frame):
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -93,6 +112,25 @@ class SignRecognizer:
                 if self.hand_disappear_counter > HAND_DISAPPEAR_TOLERANCE:
                     self.both_hands_visible = False
                     self.inference_active = False
+                    
+                    if len(self.sentence_buffer) >= MIN_SIGNS_FOR_SENTENCE:
+                        # Triggers sentence formation once inferencing stops
+                        print("\n" + "-"*50)
+                        print("Forming sentence, please wait...")
+                        print("-"*50)
+                        formed_sentence = self.form_sentence()
+                        print("\nFORMED SENTENCE:")
+                        print(f'"{formed_sentence}"')
+                        print("="*50)
+                        print("Ready for next sequence...\n")
+                    elif len(self.sentence_buffer) == 1:
+                        print(f"\nOnly one sign detected: {self.sentence_buffer[0]}")
+                        print("Need at least 2 signs to form a sentence")
+
+                    # reset buffers
+                    self.sentence_buffer.clear()
+                    self.last_k_predictions.clear()
+                    self.last_added_sign = None
                     self.frame_buffer.clear()
                     print("inference stopped - hands lost")
     
@@ -122,6 +160,75 @@ class SignRecognizer:
         
         return pred_sign, confidence_val
     
+
+    def add_sign_to_buffer(self, pred_sign, confidence):
+        """Add predicted sign to sentence buffer with deduplication"""
+
+        # check confidence threshold
+        if confidence < SIGN_CONFIDENCE_THRESHOLD:
+            return # simply stops the function
+
+        # add to recent predictions for checking
+        self.last_k_predictions.append(pred_sign)
+
+        # check if there is enough predictions 
+        if len(self.last_k_predictions) < SIGN_STABILITY_THRESHOLD:
+            return
+        
+        # check if sign is stable, appears at least SIGN_STABILITY_THRESHOLD times
+        recent_predictions = list(self.last_k_predictions)
+        sign_count = recent_predictions.count(pred_sign)
+
+        if sign_count >= SIGN_STABILITY_THRESHOLD:
+            # check if it is different from the last added sign, avoid duplicates
+            if pred_sign != self.last_added_sign:
+                # check max buffer size
+                if len(self.sentence_buffer) < MAX_SIGNS_PER_SENTENCE:
+                    self.sentence_buffer.append(pred_sign)
+                    self.last_added_sign = pred_sign
+                    print(f"Collected: {self.sentence_buffer}")
+
+                    # clear predictions after adding to avoid adding it again
+                    self.last_k_predictions.clear()
+
+
+    def form_sentence(self):
+        """Use LLM to form a grammatical sentence from collected signs"""
+
+        if not self.sentence_buffer:
+            return ""
+        
+        # prepare sign list
+        signs_str = ", ".join(self.sentence_buffer)
+
+        # create prompt
+        prompt = f"{SYSTEM_PROMPT}\nImo-ishora: {signs_str}\nJumla:"
+
+        # generate sentence
+        try:
+            response = generate(
+                self.llm_model,
+                self.llm_tokenizer,
+                prompt = prompt,
+                max_tokens = LLM_MAX_TOKENS,
+                temperature = LLM_TEMPERATURE,
+                verbose = False
+            )
+
+            # cleanup response
+            sentence = response.strip()
+
+            # removes any remaining prompt text if model repeated it
+            if "Jumla:" in sentence:
+                sentence = sentence.split("Jumla:")[-1].strip()
+            
+            return sentence if sentence else " ".join(self.sentence_buffer)
+        
+        except Exception as e:
+            print(f"Error forming sentence: {e}")
+            return " ".join(self.sentence_buffer)
+
+
     def draw_info(self, frame, results):
         h, w = frame.shape[:2]
         
@@ -142,6 +249,11 @@ class SignRecognizer:
         cv2.putText(frame, buffer_text, (10, 60),
                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         
+        # word count for LLM input
+        word_count_text = f"words: {len(self.sentence_buffer)}"
+        cv2.putText(frame, word_count_text, (10, 90),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+
         # draw landmarks
         mp_drawing = mp.solutions.drawing_utils
         
@@ -181,6 +293,7 @@ class SignRecognizer:
         
         return frame
     
+
     def run(self):
         cap = cv2.VideoCapture(VIDEO_DEVICE)
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
@@ -216,6 +329,12 @@ class SignRecognizer:
                     if pred:
                         self.current_prediction = pred
                         self.prediction_confidence = conf
+
+                        # add to sentence buffer if collecting
+                        if self.inference_active:
+                            self.add_sign_to_buffer(pred, conf)
+
+                        # in case of error try to indent it back
                         self.last_inference_time = current_time
             
             # draw info

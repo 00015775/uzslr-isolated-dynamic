@@ -83,3 +83,54 @@ python inference04_main.py
 - uses MPS on Apple Silicon
 - uses CUDA on NVIDIA GPUs
 - falls back to CPU otherwise
+
+## LLM integration
+
+### Required packages
+> [!NOTE]
+> Testing of Apple Sillicon, that is why downloading the `mlx-lm` version of the original model. That is why, this version of LLM may not work on non-macOS devices.
+
+```
+pip install mlx-lm
+
+python -c "from mlx_lm import load; load('mlx-community/Qwen2.5-1.5B-Instruct-4bit')"
+```
+
+<pre>
+python inference04_main.py
+```
+
+**Expected behavior:**
+1. Model loads (takes a few seconds first time)
+2. Camera opens
+3. Show both hands - you'll see "SIGN COLLECTION STARTED"
+4. Make signs - terminal prints "Collected: [sign1, sign2, ...]"
+5. Hide hands for >5 frames - terminal prints "Forming sentence, please wait..."
+6. After ~1 second, see formed sentence
+7. Show hands again to start new sequence
+
+**Terminal output example:**
+```
+using device: mps
+model loaded from best_model.pth
+loading language model...
+language model ready
+starting camera... press 'q' to quit
+
+==================================================
+SIGN COLLECTION STARTED
+==================================================
+Collected: ['assalomu_alaykum']
+Collected: ['assalomu_alaykum', 'maktab']
+Collected: ['assalomu_alaykum', 'maktab', 'borish']
+
+--------------------------------------------------
+Forming sentence, please wait...
+--------------------------------------------------
+
+FORMED SENTENCE:
+"Assalomu alaykum, maktabga boraman."
+==================================================
+Ready for next sequence...
+</pre>
+
