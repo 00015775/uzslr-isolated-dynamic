@@ -84,6 +84,13 @@ python inference04_main.py
 - uses CUDA on NVIDIA GPUs
 - falls back to CPU otherwise
 
+# Experimenting
+> [!NOTE]
+> As of now experimenting with Local and API-based LLMs
+> The goal is to concatenate the deduplicated words
+>
+> To avoid impacting the main branch, this LLM integration was developed in a separate exprimental branch called `experiment/llm-form-sentence`. Additionally, to protect the existing `uzslr-signs` conda environment from potential dependency conflicts, I cloned it using `conda create -n llm-uzslr-signs --clone uzslr-signs` and conducted all experiments in the new conda environment, even though this approach is memory-inefficient.
+
 ## LLM integration
 
 ### Required packages
