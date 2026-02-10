@@ -17,11 +17,15 @@ from inference01_config import (
     LLM_MODEL, LLM_MAX_TOKENS, LLM_TEMPERATURE,
     MIN_SIGNS_FOR_SENTENCE, MAX_SIGNS_PER_SENTENCE,
     SIGN_STABILITY_THRESHOLD, SIGN_CONFIDENCE_THRESHOLD,
-    SYSTEM_PROMPT
+    SYSTEM_PROMPT, USE_LOCAL_LLM, GROQ_MODEL
 )
 from inference02_preprocess import Preprocess
 from inference03_model import SignLanguageModel
 
+
+# use API models if local LLM set to False
+if not USE_LOCAL_LLM:
+    from groq import Groq
 
 class SignRecognizer:
     def __init__(self):
@@ -70,9 +74,16 @@ class SignRecognizer:
         self.last_added_sign = None
         
         # LLM model
-        print("loading language model...")
-        self.llm_model, self.llm_tokenizer = load(LLM_MODEL)
-        print("language model ready")
+        if USE_LOCAL_LLM:
+            print("loading language model...")
+            self.llm_model, self.llm_tokenizer = load(LLM_MODEL)
+            print("language model ready")
+        else:
+            print("using groq api...")
+            self.groq_client = Groq()
+            self.llm_model = None
+            self.llm_tokenizer = None
+            print("groq client ready!")
 
         
     def extract_landmarks(self, frame):
@@ -201,32 +212,49 @@ class SignRecognizer:
         # prepare sign list
         signs_str = ", ".join(self.sentence_buffer)
 
-        # create prompt
-        prompt = f"{SYSTEM_PROMPT}\nImo-ishora: {signs_str}\nJumla:"
+        if USE_LOCAL_LLM:
+            # create prompt
+            prompt = f"{SYSTEM_PROMPT}\nImo-ishora: {signs_str}\nJumla:"
 
-        # generate sentence
-        try:
-            response = generate(
-                self.llm_model,
-                self.llm_tokenizer,
-                prompt = prompt,
-                max_tokens = LLM_MAX_TOKENS,
-                temperature = LLM_TEMPERATURE,
-                verbose = False
-            )
+            # generate sentence
+            try:
+                response = generate(
+                    self.llm_model,
+                    self.llm_tokenizer,
+                    prompt = prompt,
+                    max_tokens = LLM_MAX_TOKENS,
+                    temperature = LLM_TEMPERATURE,
+                    verbose = False
+                )
 
-            # cleanup response
-            sentence = response.strip()
+                # cleanup response
+                sentence = response.strip()
 
-            # removes any remaining prompt text if model repeated it
-            if "Jumla:" in sentence:
-                sentence = sentence.split("Jumla:")[-1].strip()
+                # removes any remaining prompt text if model repeated it
+                if "Jumla:" in sentence:
+                    sentence = sentence.split("Jumla:")[-1].strip()
+                
+                return sentence if sentence else " ".join(self.sentence_buffer)
             
-            return sentence if sentence else " ".join(self.sentence_buffer)
-        
-        except Exception as e:
-            print(f"Error forming sentence: {e}")
-            return " ".join(self.sentence_buffer)
+            except Exception as e:
+                print(f"Error forming sentence: {e}")
+                return " ".join(self.sentence_buffer)
+        else:
+            try:
+                response = self.groq_client.chat.completions.create(
+                    model=GROQ_MODEL,
+                    messages=[
+                        {"role": "system", "content": SYSTEM_PROMPT},
+                        {"role": "user", "content": f"Input: {signs_str}\nOutput:"}
+                    ],
+                    max_tokens=LLM_MAX_TOKENS,
+                    temperature=LLM_TEMPERATURE
+                )
+                sentence = response.choices[0].message.content.strip()
+                return sentence if sentence else " ".join(self.sentence_buffer)
+            except Exception as e:
+                print("Error with GROQ API: {e}")
+                return " ".join(self.sentence_buffer)
 
 
     def draw_info(self, frame, results):

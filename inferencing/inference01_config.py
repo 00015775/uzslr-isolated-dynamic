@@ -47,7 +47,9 @@ def get_device():
 # python -c "from mlx_lm import load; load('mlx-community/Qwen2.5-1.5B-Instruct-4bit')"
 # link for model in HF: https://huggingface.co/mlx-community/Qwen2.5-1.5B-Instruct-4bit
 
+USE_LOCAL_LLM = False # Set to false to use API LLMs
 LLM_MODEL = "mlx-community/Qwen2.5-1.5B-Instruct-4bit"
+GROQ_MODEL = "llama-3.3-70b-versatile"
 LLM_MAX_TOKENS = 50
 LLM_TEMPERATURE = 0.7 # more for creativity
 
