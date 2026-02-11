@@ -1,0 +1,31 @@
+model,test_id,input_words,output_sentence,time_seconds
+Qwen2.5-1.5B-4bit,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu_alaykum, Bahor, Bosh_kiyim, Boshlan",0.86
+Qwen2.5-1.5B-4bit,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Likopcha ovqatlar restoranining likopchasi.,0.78
+Qwen2.5-1.5B-4bit,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, yordam_berish, qidirish, kitobni osh",0.7
+Qwen2.5-1.5B-4bit,4,"bahor, qish, yomg'ir, qor, toza",Bahor qor tozadan yomg'ir.,0.67
+Qwen2.5-1.5B-4bit,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Ovqatni bozorga pomidorli kartoshkalarni yordam,0.65
+Qwen2.5-1.5B-4bit,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","O'ynashcha ko'rsat, metroga o'ynash, o'z",0.64
+Alloma-1B-Instruct,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bahor boshlang'ichlari!",5.53
+Alloma-1B-Instruct,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Men ovqat tayyorlashni yaxshi ko'radigan restoranda mehribon va foydali ofitsiantlarga ega bo'lgan likopch,5.85
+Alloma-1B-Instruct,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, menga kitob topishda yordam bera olasizmi?",5.36
+Alloma-1B-Instruct,4,"bahor, qish, yomg'ir, qor, toza",Bahor - bu qishning sovuq va yomg'irli kunlaridan keyin keladigan iliq va quyoshli vaqt.,5.39
+Alloma-1B-Instruct,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Men restoranda pomidor va kartoshkani yaxshi ko'raman.,5.15
+Alloma-1B-Instruct,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd",Men metroda poezdga o'tirdim va mehmonxonaga o'tirdim.,5.51
+Llama-3.3-70B,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bahor boshlanganda bosh_kiyim kamro",0.72
+Llama-3.3-70B,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Mehribon xonim restoranda ovqat tayyorlash uchun likop,0.33
+Llama-3.3-70B,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, meni kitob qidirishda yordam bering, chunki",0.28
+Llama-3.3-70B,4,"bahor, qish, yomg'ir, qor, toza","Bahorda yomg'ir yog'ib, qishdagi qor erib,",0.31
+Llama-3.3-70B,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka","Bozorda pomidor va kartoshka sotib, restoranda ovqat tay",0.23
+Llama-3.3-70B,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","Mehmonxona eshigini ochish va yopish, metro va poez",0.28
+Qwen2.5-1.5B-Ollama,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish",Assalom u' Alikaum! Bahorga bosh_kiyim. Boshlan,2.13
+Qwen2.5-1.5B-Ollama,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Mehriboni oshxonada ovqatni aydiylikliklikliklik,0.39
+Qwen2.5-1.5B-Ollama,3,"iltimos, yordam_berish, qidirish, kitob, javob",Qidirishingizda iltimos va yordam berishi kerak. Kitob,0.39
+Qwen2.5-1.5B-Ollama,4,"bahor, qish, yomg'ir, qor, toza",Bahorning qishini yomg'irga qorlayman.,0.36
+Qwen2.5-1.5B-Ollama,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Ovqatni pomidor bozorida ta'yinlayman.,0.36
+Qwen2.5-1.5B-Ollama,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","Ochishga yopish, o'ynashga turushda, mehmon",0.41
+Qwen2.5-3B-Ollama,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bosh_kiyim boshlanishi kerak.",3.87
+Qwen2.5-3B-Ollama,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Ovqatni tayyorlash mehribonda likopchaga kerak.,0.66
+Qwen2.5-3B-Ollama,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, qidiruvga yordam beraman. Kitobga qat",0.61
+Qwen2.5-3B-Ollama,4,"bahor, qish, yomg'ir, qor, toza","Bahor, yomq'ir va toza qoriga qat'iy yord",0.61
+Qwen2.5-3B-Ollama,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Ovqatni tayyorlash bozorda pomidor va kartoshka boz,0.61
+Qwen2.5-3B-Ollama,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","O'tkazuvni mehmonxonaga, yoqkuvni metroga,",0.69

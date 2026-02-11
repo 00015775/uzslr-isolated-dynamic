@@ -3,6 +3,9 @@ import time
 from datetime import datetime
 import time
 import re
+import subprocess
+import sys
+
 
 # pip install mlx-lm
 try:
@@ -29,8 +32,19 @@ except ImportError:
     TRANSFORMERS_AVAILABLE = False
     print("Warning: transformers not installed")
 
+# curl -fsSL https://ollama.com/install.sh | sh 
+# pip install ollama
+# ollama pull qwen2.5:1.5b
+# ollama pull qwen2.5:3b
+try:
+   import ollama
+   OLLAMA_AVAILABLE = True
+except ImportError:
+   OLLAMA_AVAILABLE = False
+   print("Warning: ollama not installed")
+   
 
-
+# these test cases are based on the 50 signs that original model was trained on
 TEST_CASES = [
     ["assalomu_alaykum", "bahor", "bosh_kiyim", "boshlanish"],
     ["ovqat_tayyorlash", "restoran", "mehribon", "likopcha"],
@@ -258,6 +272,97 @@ def test_alloma_model(model_name, model_id, test_cases, max_tokens=50):
    return results
   
 
+# tests ollama models
+def test_ollama_model(model_name, model_id, test_cases, temperature=0.7, max_tokens=50):
+   """Test Ollama model"""
+   print(f"\nUsing Ollama with {model_name}...\n")
+
+   results = []
+
+   for idx, words in enumerate(test_cases, 1):
+      words_str = ", ".join(words)
+
+      print(f"Test {idx}: {words_str}")
+
+      start_time = time.time()
+
+      try:
+         response = ollama.chat(
+            model=model_id,
+            messages=[
+               {
+                  "role": "system",
+                  "content": SYSTEM_PROMPT
+               },
+               {
+                  "role": "user",
+                  "content": f"So'zlar: {words_str}\nJumla:"
+               }
+            ],
+            options={
+               "temperature": temperature,
+               "num_predict": max_tokens
+            }
+         )
+
+         elapsed = time.time() - start_time
+
+         sentence = response["message"]["content"].strip()
+
+         if "Jumla:" in sentence:
+            sentence = sentence.split("Jumla:")[-1].strip()
+         if "So'zlar:" in sentence:
+            sentence = sentence.split("So'zlar:")[0].strip()
+            
+         print(f"Output: {sentence}")
+         print(f"Time: {elapsed:.2f}s\n")
+
+         results.append({
+            "model": model_name,
+            "test_id": idx,
+            "input_words": words_str,
+            "output_sentence": sentence,
+            "time_seconds": round(elapsed, 2)
+         })
+      except Exception as e:
+         print(f"Error: {e}\n") 
+         results.append({
+              'model': model_name,
+              'test_id': idx,
+              'input_words': words_str,
+              'output_sentence': f"ERROR: {str(e)}",
+              'time_seconds': 0.0
+          })
+         
+   return results
+        
+
+def ensure_ollama_running():
+   """Check if Ollama is running, if not provide instructions"""
+   try:
+      result = subprocess.run(['ollama', 'list'],
+                              capture_output=True,
+                              text=True,
+                              timeout=5
+                              )
+      if result.returncode == 0:
+         print("Ollama service is running")
+         return True
+      else:
+         print("Ollama is installed but not responding")
+         return False
+   except FileNotFoundError:
+      print("ERROR: Ollama is not installed")
+      print("Install from: https://ollama.com")
+      return False
+   except subprocess.TimeoutExpired:
+      print("ERROR: Ollama service is not responding")
+      print("Start it with: ollama serve")
+      return False
+   except Exception as e:
+      print(f"ERROR checking Ollama {e}")
+      return False
+
 
 # save results
 def save_to_csv(all_results, filename=None):
@@ -291,8 +396,8 @@ def main():
           model_name="Qwen2.5-1.5B-4bit",
           model_id="mlx-community/Qwen2.5-1.5B-Instruct-4bit",
           test_cases=TEST_CASES,
-          temperature=0.7,
-          max_tokens=50
+          temperature=0.1,
+          max_tokens=18
           )
           all_results.extend(mlx_results)
     except Exception as e:
@@ -318,7 +423,7 @@ def main():
               model_name="Alloma-1B-Instruct",
               model_id="uzlm/alloma-1B-Instruct",
               test_cases=TEST_CASES,
-              max_tokens=50
+              max_tokens=18
           )
           all_results.extend(alloma_results)
       except Exception as e:
@@ -331,12 +436,37 @@ def main():
           model_name="Llama-3.3-70B",
           model_id="llama-3.3-70b-versatile",
           test_cases=TEST_CASES,
-          temperature=0.7,
-          max_tokens=50
+          temperature=0.1,
+          max_tokens=18
           )
           all_results.extend(groq_results)
      except Exception as e:
         print(f"Error testing Groq model: {e}")
+
+  if OLLAMA_AVAILABLE:
+     if not ensure_ollama_running():
+        print("Skipping Ollama tests - service not available")
+     else:
+        ollama_models = [
+        {"name": "Qwen2.5-1.5B-Ollama", "id": "qwen2.5:1.5b"},
+        {"name": "Qwen2.5-3B-Ollama", "id": "qwen2.5:3b"}
+        # {"name": "Llama3.2-3B-Ollama", "id": "llama3.2:3b"},
+        # {"name": "Gemma2-2B-Ollama", "id": "gemma2:2b"}
+     ]
+
+     for model_config in ollama_models:
+        try:
+           ollama_results = test_ollama_model(
+              model_name=model_config["name"],
+              model_id=model_config["id"],
+              test_cases=TEST_CASES,
+              temperature=0.1,
+              max_tokens=18
+           )
+           all_results.extend(ollama_results)
+        except Exception as e:
+           print(f"Error testing {model_config['name']}: {e}\n")
+
 
   if all_results:
      save_to_csv(all_results)
@@ -347,3 +477,5 @@ def main():
 
 if __name__ == "__main__":
   main()
+
+

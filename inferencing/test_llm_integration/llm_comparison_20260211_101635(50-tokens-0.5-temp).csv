@@ -1,0 +1,31 @@
+model,test_id,input_words,output_sentence,time_seconds
+Qwen2.5-1.5B-4bit,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu_alaykum, Bahor, Bosh_kiyim, Boshlanish.",1.36
+Qwen2.5-1.5B-4bit,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Oshxonida oshlik qorlik,0.99
+Qwen2.5-1.5B-4bit,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, yordam_berish, qidirish, kitobni oshxonada tayyorlayman.",0.99
+Qwen2.5-1.5B-4bit,4,"bahor, qish, yomg'ir, qor, toza",Qonun tozadan qon,1.09
+Qwen2.5-1.5B-4bit,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",,1.13
+Qwen2.5-1.5B-4bit,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","O'ynashcha ko'rsat, metroga o'ynash, o'zgarotga o'ynash, o'zgarotga turish, mehmonxona ko'rsat, o'z",1.03
+Alloma-1B-Instruct,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bahor boshlang'ichlari!",5.39
+Alloma-1B-Instruct,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Men ovqat tayyorlashni yaxshi ko'radigan restoranda mehribon va foydali ofitsiantlarga ega bo'lgan likopchali qulay taomlarni qidiryapman.,6.49
+Alloma-1B-Instruct,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, menga kitob topishda yordam bera olasizmi?",5.84
+Alloma-1B-Instruct,4,"bahor, qish, yomg'ir, qor, toza",Bahor - bu qishning sovuq va yomg'irli kunlaridan keyin keladigan iliq va quyoshli vaqt.,5.52
+Alloma-1B-Instruct,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Men restoranda pomidor va kartoshkani yaxshi ko'raman.,5.8
+Alloma-1B-Instruct,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd",Men metroda poezdga o'tirdim va mehmonxonaga o'tirdim. Men kitob o'qidim va oshxonada ovqat tayyorladim.,6.79
+Llama-3.3-70B,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bahor boshlanishi bilan bosh_kiyim kiyish kerak emas.",0.81
+Llama-3.3-70B,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Mehribon likopcha restoranda ovqat tayyorlaydi.,0.23
+Llama-3.3-70B,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, meni kitob qidirishda yordam bering, chunki unda javob bor.",0.36
+Llama-3.3-70B,4,"bahor, qish, yomg'ir, qor, toza","Qishda qor, bahorda yomg'ir yog'ib, hamma joy toza bo'ladi.",0.32
+Llama-3.3-70B,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka","Bozorda pomidor va kartoshka sotib, restoranda ovqat tayyorlayman.",0.24
+Llama-3.3-70B,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd","Mehmonxona eshigini ochish va yopish, metro va poezdga turish, ular haqida o'ynash mumkin emas.",0.46
+Qwen2.5-1.5B-Ollama,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalom u`llah kaum! Bahor bo`limiga ulanib, bosh_kiyimga yozilgan. Boshlanishga xush kelibsiz!",2.39
+Qwen2.5-1.5B-Ollama,2,"ovqat_tayyorlash, restoran, mehribon, likopcha",Mehribonlikga oshxonalarini restoraniy likopchaga takliflayman.,0.48
+Qwen2.5-1.5B-Ollama,3,"iltimos, yordam_berish, qidirish, kitob, javob",Qidirish uchun kitobni iltimos yordam berishingiz kerak.,0.43
+Qwen2.5-1.5B-Ollama,4,"bahor, qish, yomg'ir, qor, toza","Bahor kuni yomg'irlikga qushmayman, o'ta tozalayman.",0.48
+Qwen2.5-1.5B-Ollama,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Ovqatni pomidor bozorida taoyetmayman.,0.36
+Qwen2.5-1.5B-Ollama,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd",Ochishga yopish uchun o'ynanlashda metroyada poezdga turish mumkin.,0.55
+Qwen2.5-3B-Ollama,1,"assalomu_alaykum, bahor, bosh_kiyim, boshlanish","Assalomu alaykum, bosh_kiyim boshlanishi kerak.",5.71
+Qwen2.5-3B-Ollama,2,"ovqat_tayyorlash, restoran, mehribon, likopcha","Mehribonlikda ovqatni tayyorlayman, uchun likopchaning ichiga.",0.96
+Qwen2.5-3B-Ollama,3,"iltimos, yordam_berish, qidirish, kitob, javob","Iltimos, qidiruvga yordam beraman. Kitobga qatorda javoblar olingan.",0.89
+Qwen2.5-3B-Ollama,4,"bahor, qish, yomg'ir, qor, toza","Bahorni toozaga, qichiga yomq'irib, qoriqagon.",0.69
+Qwen2.5-3B-Ollama,5,"ovqat_tayyorlash, restoran, bozor, pomidor, kartoshka",Ovqatni tayyorlash bozorda pomidor va kartoshka bilan yo'l qilaman.,0.79
+Qwen2.5-3B-Ollama,6,"ochish, yopish, o'ynash, turish, mehmonxona, metro, poezd",O'tkazuvni mehmonxonadagi o'yinlarni o'ynayman.,0.8
