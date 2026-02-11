@@ -46,13 +46,52 @@ except ImportError:
 
 # these test cases are based on the 50 signs that original model was trained on
 TEST_CASES = [
-    ["assalomu_alaykum", "bahor", "bosh_kiyim", "boshlanish"],
-    ["ovqat_tayyorlash", "restoran", "mehribon", "likopcha"],
-    ["iltimos", "yordam_berish", "qidirish", "kitob", "javob"],
-    ["bahor", "qish", "yomg'ir", "qor", "toza"],
-    ["ovqat_tayyorlash", "restoran", "bozor", "pomidor", "kartoshka"],
-    ["ochish", "yopish", "o'ynash", "turish", "mehmonxona", "metro", "poezd"]
+    ["bola", "kitob", "o'qish"],
+    ["men", "bozor", "borish"],
+    ["ustoz", "savol", "berish"],
+    ["do'st", "uy", "kelish"],
+    ["ona", "ovqat", "tayyorlash"],
+    ["talaba", "dars", "boshlash"],
+
+    ["men", "ertalab", "maktab", "borish"],
+    ["bola", "kecha", "park", "o'ynash"],
+    ["ota", "mashina", "ish", "haydash"],
+    ["biz", "do'kon", "non", "sotib_olish"],
+    ["ustoz", "talaba", "topshiriq", "tushuntirish"],
+
+    ["men", "bugun", "kutubxona", "kitob", "o'qish"],
+    ["bola", "do'st", "stadion", "futbol", "o'ynash"],
+    ["ona", "bozor", "sabzavot", "kechqurun", "pishirish"],
+    ["talaba", "universitet", "imtihon", "ertalab", "topshirish"],
+    ["biz", "tog'", "dam_olish", "rasm", "olish"]
 ]
+
+
+TEST_CASES_3_WORDS = [
+    ["bola", "kitob", "o'qish"],
+    ["men", "bozor", "borish"],
+    ["ustoz", "savol", "berish"],
+    ["do'st", "uy", "kelish"],
+    ["ona", "ovqat", "tayyorlash"],
+    ["talaba", "dars", "boshlash"]
+]
+
+TEST_CASES_4_WORDS = [
+    ["men", "ertalab", "maktab", "borish"],
+    ["bola", "kecha", "park", "o'ynash"],
+    ["ota", "mashina", "ish", "haydash"],
+    ["biz", "do'kon", "non", "sotib_olish"],
+    ["ustoz", "talaba", "topshiriq", "tushuntirish"]
+]
+
+TEST_CASES_5_WORDS = [
+    ["men", "bugun", "kutubxona", "kitob", "o'qish"],
+    ["bola", "do'st", "stadion", "futbol", "o'ynash"],
+    ["ona", "bozor", "sabzavot", "kechqurun", "pishirish"],
+    ["talaba", "universitet", "imtihon", "ertalab", "topshirish"],
+    ["biz", "tog'", "dam_olish", "rasm", "olish"]
+]
+
 
 SYSTEM_PROMPT = """Siz berilgan so'zlardan to'g'ri va mantiqiy jumla tuzasiz.
 
@@ -60,6 +99,10 @@ Qoidalar:
 - So'zlarni grammatik jihatdan to'g'ri bog'lang
 - Mantiqli va tushunarli jumla yarating
 - Faqat yakuniy jumlani yozing, boshqa hech narsa qo'shmang
+- Faqat BIRTA sodda va tabiiy jumla yozing
+- Qo‘shimcha gap yozmang
+- Izoh bermang
+- So‘zlarning barchasidan foydalaning
 
 Misollar:
 
@@ -397,7 +440,7 @@ def main():
           model_id="mlx-community/Qwen2.5-1.5B-Instruct-4bit",
           test_cases=TEST_CASES,
           temperature=0.1,
-          max_tokens=18
+          max_tokens=21
           )
           all_results.extend(mlx_results)
     except Exception as e:
@@ -416,14 +459,13 @@ def main():
   #     except Exception as e:
   #         print(f"Error testing Alloma 3B: {e}\n")
 
-
   if TRANSFORMERS_AVAILABLE:
       try:
           alloma_results = test_alloma_model(
               model_name="Alloma-1B-Instruct",
               model_id="uzlm/alloma-1B-Instruct",
               test_cases=TEST_CASES,
-              max_tokens=18
+              max_tokens=21
           )
           all_results.extend(alloma_results)
       except Exception as e:
@@ -437,7 +479,7 @@ def main():
           model_id="llama-3.3-70b-versatile",
           test_cases=TEST_CASES,
           temperature=0.1,
-          max_tokens=18
+          max_tokens=21
           )
           all_results.extend(groq_results)
      except Exception as e:
@@ -461,7 +503,7 @@ def main():
               model_id=model_config["id"],
               test_cases=TEST_CASES,
               temperature=0.1,
-              max_tokens=18
+              max_tokens=21
            )
            all_results.extend(ollama_results)
         except Exception as e:

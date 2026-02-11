@@ -1,0 +1,83 @@
+model,test_id,input_words,output_sentence,time_seconds
+Qwen2.5-1.5B-4bit,1,"bola, kitob, o'qish",Bola kitob o'qishga.,0.91
+Qwen2.5-1.5B-4bit,2,"men, bozor, borish",Men bozorga boraman.,0.69
+Qwen2.5-1.5B-4bit,3,"ustoz, savol, berish",Ustozga savollarni beraman.,0.69
+Qwen2.5-1.5B-4bit,4,"do'st, uy, kelish",Do'stlik uyda kelish.,0.69
+Qwen2.5-1.5B-4bit,5,"ona, ovqat, tayyorlash",Ona ovqatni oshxonada tayyorlayman.,0.7
+Qwen2.5-1.5B-4bit,6,"talaba, dars, boshlash",Talaba darsga boshlashga yordam kerak.,0.7
+Qwen2.5-1.5B-4bit,7,"men, ertalab, maktab, borish",Men ertalab boraman.,0.71
+Qwen2.5-1.5B-4bit,8,"bola, kecha, park, o'ynash",Bolan kecha parki o'ynash.,0.7
+Qwen2.5-1.5B-4bit,9,"ota, mashina, ish, haydash",Ota mashinaga haydash.,0.7
+Qwen2.5-1.5B-4bit,10,"biz, do'kon, non, sotib_olish",Biz do'konnoni sotib_olaman.,0.69
+Qwen2.5-1.5B-4bit,11,"ustoz, talaba, topshiriq, tushuntirish","Ustoz talabalar topshiriqlari tushuntirish uchun.
+
+So",0.74
+Qwen2.5-1.5B-4bit,12,"men, bugun, kutubxona, kitob, o'qish",Bugun kutubxonada kitob o'qishman.,0.72
+Qwen2.5-1.5B-4bit,13,"bola, do'st, stadion, futbol, o'ynash",Futbol o'ynashni stadionga bola do'st.,0.7
+Qwen2.5-1.5B-4bit,14,"ona, bozor, sabzavot, kechqurun, pishirish",Ona bozorga sabzavotni pishiraman.,0.69
+Qwen2.5-1.5B-4bit,15,"talaba, universitet, imtihon, ertalab, topshirish",Talaba universitetga ertalab topshiraman.,0.7
+Qwen2.5-1.5B-4bit,16,"biz, tog', dam_olish, rasm, olish",Biz to'g'iroqdam_olishni olish.,0.68
+Alloma-1B-Instruct,1,"bola, kitob, o'qish",Bola kitob o'qiydi.,6.48
+Alloma-1B-Instruct,2,"men, bozor, borish",Men bozorga boraman.,5.38
+Alloma-1B-Instruct,3,"ustoz, savol, berish","Men talabaga ustoz, savol va berish kerak.",7.79
+Alloma-1B-Instruct,4,"do'st, uy, kelish",Do'stingizga uy vazifasini bajarishda yordam berish uchun kelishingizni iltimos qiling.,8.47
+Alloma-1B-Instruct,5,"ona, ovqat, tayyorlash",Onam menga kechki ovqat pishirishni o'rgatadi.,6.4
+Alloma-1B-Instruct,6,"talaba, dars, boshlash",Talaba darsga borishi kerak.,6.22
+Alloma-1B-Instruct,7,"men, ertalab, maktab, borish",Men maktabga ertalab boraman.,5.37
+Alloma-1B-Instruct,8,"bola, kecha, park, o'ynash",Bola kecha parkda o'ynadi.,6.33
+Alloma-1B-Instruct,9,"ota, mashina, ish, haydash",Men ota-onamning mashinasini haydashim kerak.,7.48
+Alloma-1B-Instruct,10,"biz, do'kon, non, sotib_olish",Biz do'konga non sotib olish uchun ketyapmiz.,7.1
+Alloma-1B-Instruct,11,"ustoz, talaba, topshiriq, tushuntirish",Ustoz talabaga topshiriq tushuntirishda yordam beradi.,7.56
+Alloma-1B-Instruct,12,"men, bugun, kutubxona, kitob, o'qish",Bugun men kutubxonada kitob o'qiyman.,5.95
+Alloma-1B-Instruct,13,"bola, do'st, stadion, futbol, o'ynash",Bola do'stini stadionga futbol o'ynashga taklif qildi.,5.91
+Alloma-1B-Instruct,14,"ona, bozor, sabzavot, kechqurun, pishirish",Ona sabzavotlarni kechki ovqatga pishirish uchun eng yaxshi vaqt qachon?,6.01
+Alloma-1B-Instruct,15,"talaba, universitet, imtihon, ertalab, topshirish",Talaba ertalab soat 8:00 da universitetga boradi va imtihon uchun ertalab soat 10:00,6.41
+Alloma-1B-Instruct,16,"biz, tog', dam_olish, rasm, olish","Biz tog'ga chiqmoqchimiz, lekin rasmni olish uchun yetarli pulimiz yo'q.",6.27
+Llama-3.3-70B,1,"bola, kitob, o'qish",Bola kitob o'qimoqda.,0.82
+Llama-3.3-70B,2,"men, bozor, borish",Men bozorga boraman.,0.29
+Llama-3.3-70B,3,"ustoz, savol, berish",Ustoz savol beradi.,0.23
+Llama-3.3-70B,4,"do'st, uy, kelish",Do'stim uyga kelish uchun tayyorlanmoqda.,0.27
+Llama-3.3-70B,5,"ona, ovqat, tayyorlash",Ona ovqat tayyorlamoqda.,0.35
+Llama-3.3-70B,6,"talaba, dars, boshlash",Talaba darsni boshlaydi.,0.27
+Llama-3.3-70B,7,"men, ertalab, maktab, borish",Men ertalab maktabga boraman.,0.47
+Llama-3.3-70B,8,"bola, kecha, park, o'ynash",Bola kecha parkda o'ynadi.,0.3
+Llama-3.3-70B,9,"ota, mashina, ish, haydash",Otam ishga mashina haydashadi.,0.37
+Llama-3.3-70B,10,"biz, do'kon, non, sotib_olish",Biz do'kondan non sotib olamiz.,0.54
+Llama-3.3-70B,11,"ustoz, talaba, topshiriq, tushuntirish",Ustoz talabaga topshiriqni tushuntirdi.,0.36
+Llama-3.3-70B,12,"men, bugun, kutubxona, kitob, o'qish",Men bugun kutubxonada kitob o'qiman.,0.37
+Llama-3.3-70B,13,"bola, do'st, stadion, futbol, o'ynash",Bola va do'stim stadionda futbol o'ynashadi.,2.01
+Llama-3.3-70B,14,"ona, bozor, sabzavot, kechqurun, pishirish",Ona kechqurun bozorda sabzavot sotib kelyapti va,0.69
+Llama-3.3-70B,15,"talaba, universitet, imtihon, ertalab, topshirish",Talaba universitetda ertalab imtihon topshiradi.,0.33
+Llama-3.3-70B,16,"biz, tog', dam_olish, rasm, olish",Biz tog'da dam olar va rasm olamiz.,0.32
+Qwen2.5-1.5B-Ollama,1,"bola, kitob, o'qish",Bola qilinadi.,2.02
+Qwen2.5-1.5B-Ollama,2,"men, bozor, borish",Men bozorga boraman.,0.28
+Qwen2.5-1.5B-Ollama,3,"ustoz, savol, berish",Ustozga savollarni beraman.,0.27
+Qwen2.5-1.5B-Ollama,4,"do'st, uy, kelish",Do'stingiz uyi kelishi.,0.24
+Qwen2.5-1.5B-Ollama,5,"ona, ovqat, tayyorlash",Oyna oshxonada tayyorlayman.,0.28
+Qwen2.5-1.5B-Ollama,6,"talaba, dars, boshlash",Boshlang chiqarishga talabalar darsini boshlash.,0.37
+Qwen2.5-1.5B-Ollama,7,"men, ertalab, maktab, borish",Men maktabga ertalaban.,0.24
+Qwen2.5-1.5B-Ollama,8,"bola, kecha, park, o'ynash",Bola kechilida qo'llanadi va o'yinlashda parkga o',0.4
+Qwen2.5-1.5B-Ollama,9,"ota, mashina, ish, haydash",Mashinani o'taman.,0.23
+Qwen2.5-1.5B-Ollama,10,"biz, do'kon, non, sotib_olish",Biz do'konni topishingizga non sotib olaman.,0.35
+Qwen2.5-1.5B-Ollama,11,"ustoz, talaba, topshiriq, tushuntirish",Ustozga topshiriqlarini tushuntiram.,0.33
+Qwen2.5-1.5B-Ollama,12,"men, bugun, kutubxona, kitob, o'qish",Men bugungi kutubxonada kitob o'qishing.,0.31
+Qwen2.5-1.5B-Ollama,13,"bola, do'st, stadion, futbol, o'ynash",Bola do'sti futbol o'ynash.,0.28
+Qwen2.5-1.5B-Ollama,14,"ona, bozor, sabzavot, kechqurun, pishirish","Ona bozor bo'yini kechqurun, pishirish uchun",0.4
+Qwen2.5-1.5B-Ollama,15,"talaba, universitet, imtihon, ertalab, topshirish",Universitetda talabalarga ertalaban.,0.27
+Qwen2.5-1.5B-Ollama,16,"biz, tog', dam_olish, rasm, olish",Bizdam_olishingoz_rasm_oshish.,0.28
+Qwen2.5-3B-Ollama,1,"bola, kitob, o'qish","O'qishi kerak, bola o'qishiga.",4.3
+Qwen2.5-3B-Ollama,2,"men, bozor, borish",Men bozorga boraman.,0.38
+Qwen2.5-3B-Ollama,3,"ustoz, savol, berish",Ustozga savollanaman.,0.38
+Qwen2.5-3B-Ollama,4,"do'st, uy, kelish",Do'stingiz uyg'alovchi kelishiga qarash.,0.55
+Qwen2.5-3B-Ollama,5,"ona, ovqat, tayyorlash",Onani ovqatni tayyorlayman.,0.44
+Qwen2.5-3B-Ollama,6,"talaba, dars, boshlash",Talabani darsga boshlanaman.,0.46
+Qwen2.5-3B-Ollama,7,"men, ertalab, maktab, borish",Men ertalab maktabga boraman.,0.43
+Qwen2.5-3B-Ollama,8,"bola, kecha, park, o'ynash",Kechaga bolumka o'yin oynayman.,0.51
+Qwen2.5-3B-Ollama,9,"ota, mashina, ish, haydash",Ota mashinani ishdigan haydashga ko'ra olaman.,0.61
+Qwen2.5-3B-Ollama,10,"biz, do'kon, non, sotib_olish",Biz do'konimizni non-sotib olishimomani yozam.,0.65
+Qwen2.5-3B-Ollama,11,"ustoz, talaba, topshiriq, tushuntirish",Ustoz talabaga topshiriqtani tushuntiraman.,0.59
+Qwen2.5-3B-Ollama,12,"men, bugun, kutubxona, kitob, o'qish",Men bugun kutubxonaga kitobni o'qishingimiga e'tibor b,0.66
+Qwen2.5-3B-Ollama,13,"bola, do'st, stadion, futbol, o'ynash","Do'stlar, futbollarni o'yining stadionida oynaym.",0.66
+Qwen2.5-3B-Ollama,14,"ona, bozor, sabzavot, kechqurun, pishirish",Onani kechqurunni sabzavotga pishiraman.,0.6
+Qwen2.5-3B-Ollama,15,"talaba, universitet, imtihon, ertalab, topshirish",Talabaning imtihonini ertalab topshirmisiz.,0.63
+Qwen2.5-3B-Ollama,16,"biz, tog', dam_olish, rasm, olish",Biz o'qimlarni dam_xonasida dam_olaman.,0.58
