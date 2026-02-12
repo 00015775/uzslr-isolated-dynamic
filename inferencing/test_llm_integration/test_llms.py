@@ -409,18 +409,54 @@ def ensure_ollama_running():
 
 # save results
 def save_to_csv(all_results, filename=None):
-    """Save all results to CSV"""
+    """Save results in pivot format for easy model comparison"""
     if filename is None:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f'llm_comparison_{timestamp}.csv'
     
+    # Group results by test_id
+    grouped = {}
+    models = set()
+    
+    for result in all_results:
+        test_id = result['test_id']
+        input_words = result['input_words']
+        model = result['model']
+        output = result['output_sentence']
+        time_sec = result['time_seconds']
+        
+        models.add(model)
+        
+        if test_id not in grouped:
+            grouped[test_id] = {
+                'input_words': input_words,
+                'models': {}
+            }
+        
+        # Combine output and time
+        grouped[test_id]['models'][model] = f"{output} ({time_sec}s)"
+    
+    # Sort models for consistent column order
+    sorted_models = sorted(models)
+    
+    # Write to CSV
     with open(filename, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ['model', 'test_id', 'input_words', 'output_sentence', 'time_seconds']
+        fieldnames = ['test_id', 'input_words'] + sorted_models
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         
         writer.writeheader()
-        for result in all_results:
-            writer.writerow(result)
+        
+        for test_id in sorted(grouped.keys()):
+            row = {
+                'test_id': test_id,
+                'input_words': grouped[test_id]['input_words']
+            }
+            
+            # Add each model's output
+            for model in sorted_models:
+                row[model] = grouped[test_id]['models'].get(model, 'N/A')
+            
+            writer.writerow(row)
     
     print(f"\n{'='*80}")
     print(f"Results saved to: {filename}")
