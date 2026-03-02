@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UzSLR — Uzbek Sign Language Recognition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">UzSLR</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Recognise</a>
+      <a href="signs.html" class="nav-link">50 Signs</a>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ── left: camera feed ── -->
+    <section class="camera-section">
+      <div class="camera-wrapper" id="cameraWrapper">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+
+        <div class="camera-overlay-ui">
+          <div class="status-pill" id="statusPill">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">starting camera…</span>
+          </div>
+          <div class="buffer-bar-wrap">
+            <div class="buffer-bar" id="bufferBar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="camera-hint">
+        Show <strong>both hands</strong> to begin recognition
+      </div>
+    </section>
+
+    <!-- ── right: prediction ── -->
+    <section class="prediction-section">
+      <div class="prediction-card" id="predictionCard">
+        <div class="prediction-idle" id="predictionIdle">
+          <div class="idle-icon">✋🤟</div>
+          <p>Waiting for sign…</p>
+        </div>
+
+        <div class="prediction-result hidden" id="predictionResult">
+          <div class="pred-label" id="predLabel">—</div>
+          <div class="confidence-wrap">
+            <div class="confidence-bar-bg">
+              <div class="confidence-bar-fill" id="confBar"></div>
+            </div>
+            <span class="confidence-pct" id="confPct">0%</span>
+          </div>
+          <a class="view-sign-link" id="viewSignLink" href="signs.html" target="_blank">
+            see how this sign looks →
+          </a>
+        </div>
+      </div>
+
+      <div class="history-wrap">
+        <div class="history-title">recent predictions</div>
+        <ol class="history-list" id="historyList"></ol>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/holistic.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+</html>

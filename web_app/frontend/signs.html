@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UzSLR — 50 Signs Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* modal */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(10px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      border-radius: 14px;
+      padding: 2.5rem 2rem 2rem;
+      width: min(90vw, 760px);
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      animation: modalIn 0.22s cubic-bezier(0.34,1.4,0.64,1);
+    }
+
+    @keyframes modalIn {
+      from { opacity:0; transform: scale(0.93) translateY(12px); }
+      to   { opacity:1; transform: scale(1)    translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      background: none;
+      border: 1px solid var(--border-hi);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 1rem;
+      width: 32px; height: 32px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--text); }
+
+    .modal-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      text-transform: capitalize;
+    }
+
+    .modal-counter {
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      margin-top: -1rem;
+    }
+
+    .modal-gifs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .modal-gifs { grid-template-columns: 1fr; }
+    }
+
+    .modal-gif-wrap {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      aspect-ratio: 1;
+    }
+
+    .modal-gif {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-rep-tag {
+      position: absolute;
+      top: 8px; left: 8px;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      background: rgba(0,0,0,0.65);
+      color: var(--muted);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .modal-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .modal-nav-btn {
+      flex: 1;
+      padding: 0.7rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .modal-nav-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(200,241,53,0.05);
+    }
+    .modal-nav-btn.next { justify-content: flex-end; }
+    .modal-nav-btn.prev { justify-content: flex-start; }
+
+    .modal-nav-sign {
+      font-weight: 500;
+      text-transform: capitalize;
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">UzSLR</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Recognise</a>
+      <a href="signs.html" class="nav-link active">50 Signs</a>
+    </div>
+  </nav>
+
+  <div class="signs-header">
+    <h1 class="signs-title">50 Uzbek Signs</h1>
+    <p class="signs-subtitle">Click any sign to view it enlarged. Use arrow keys or the buttons to navigate between signs.</p>
+    <input class="signs-search" type="text" id="searchInput" placeholder="search signs…" />
+  </div>
+
+  <div class="signs-grid" id="signsGrid"></div>
+
+  <!-- ── fullscreen modal ── -->
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
+    <div class="modal" id="modal">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-counter" id="modalCounter"></div>
+      <div class="modal-gifs">
+        <div class="modal-gif-wrap">
+          <img class="modal-gif" id="modalGif0" src="" alt="" />
+          <span class="modal-rep-tag">rep 1</span>
+        </div>
+        <div class="modal-gif-wrap">
+          <img class="modal-gif" id="modalGif1" src="" alt="" />
+          <span class="modal-rep-tag">rep 2</span>
+        </div>
+      </div>
+      <div class="modal-nav">
+        <button class="modal-nav-btn prev" id="btnPrev">
+          ← <span class="modal-nav-sign" id="prevLabel"></span>
+        </button>
+        <button class="modal-nav-btn next" id="btnNext">
+          <span class="modal-nav-sign" id="nextLabel"></span> →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ALL_SIGNS = [
+      'assalomu_alaykum','bahor','birga',"bo'sh",'bosh_kiyim','boshlanishi',
+      'bozor','eshik','futbol','iltimos','internet','javob','jismoniy_tarbiya',
+      'karam','kartoshka','kichik','kitob',"ko'prik",'likopcha','maktab',
+      'mehmonxona','mehribon','metro','musiqa',"o'simlik_yog'i","o'ynash",
+      'ochish','ot','ovqat_tayyorlash','oxiri','poezd','pomidor','qidirish',
+      'qish',"qo'ziqorin",'qor',"qorong'i",'quyon','restoran',"sariyog'",
+      'shokolad','sovun','stakan','televizor','tosh','toza','turish',
+      "yomg'ir",'yopish','yordam_berish'
+    ];
+
+    // visibleSigns = current filtered list (what the grid shows)
+    let visibleSigns = [...ALL_SIGNS];
+    let modalIndex   = -1;   // index within visibleSigns
+
+    function label(s) { return s.replace(/_/g, ' '); }
+
+    // grid
+    function buildGrid(filter = '') {
+      const grid = document.getElementById('signsGrid');
+      grid.innerHTML = '';
+      visibleSigns = ALL_SIGNS.filter(s => s.includes(filter.toLowerCase().replace(/ /g, '_')));
+
+      if (visibleSigns.length === 0) {
+        grid.innerHTML = '<p class="no-results">No signs match your search.</p>';
+        return;
+      }
+
+      visibleSigns.forEach((sign, i) => {
+        const card = document.createElement('div');
+        card.className = 'sign-card';
+        card.style.animationDelay = `${(i % 20) * 30}ms`;
+        card.style.cursor = 'pointer';
+        card.setAttribute('data-index', i);
+
+        const enc = encodeURIComponent(sign);
+        card.innerHTML = `
+          <div class="sign-card-label">${label(sign)}</div>
+          <div class="sign-gifs">
+            <div class="sign-gif-wrap">
+              <img class="sign-gif" src="/signs/${enc}/rep_000.gif" alt="${sign} rep 1" loading="lazy"
+                onerror="this.parentElement.style.display='none'" />
+              <span class="rep-tag">rep 1</span>
+            </div>
+            <div class="sign-gif-wrap">
+              <img class="sign-gif" src="/signs/${enc}/rep_001.gif" alt="${sign} rep 2" loading="lazy"
+                onerror="this.parentElement.style.display='none'" />
+              <span class="rep-tag">rep 2</span>
+            </div>
+          </div>
+        `;
+        card.addEventListener('click', () => openModal(i));
+        grid.appendChild(card);
+      });
+    }
+
+    // modal
+    const backdrop   = document.getElementById('modalBackdrop');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalCounter = document.getElementById('modalCounter');
+    const modalGif0  = document.getElementById('modalGif0');
+    const modalGif1  = document.getElementById('modalGif1');
+    const btnPrev    = document.getElementById('btnPrev');
+    const btnNext    = document.getElementById('btnNext');
+    const prevLabel  = document.getElementById('prevLabel');
+    const nextLabel  = document.getElementById('nextLabel');
+
+    function openModal(index) {
+      modalIndex = index;
+      renderModal();
+      backdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      backdrop.classList.remove('open');
+      document.body.style.overflow = '';
+      modalIndex = -1;
+    }
+
+    function navigate(dir) {
+      const n = visibleSigns.length;
+      // wrap: first→last, last→first
+      modalIndex = (modalIndex + dir + n) % n;
+      renderModal();
+    }
+
+    function renderModal() {
+      const sign = visibleSigns[modalIndex];
+      const enc  = encodeURIComponent(sign);
+      const n    = visibleSigns.length;
+
+      modalTitle.textContent   = label(sign);
+      modalCounter.textContent = `sign ${modalIndex + 1} of ${n}`;
+
+      modalGif0.src = `/signs/${enc}/rep_000.gif`;
+      modalGif0.alt = `${sign} rep 1`;
+      modalGif1.src = `/signs/${enc}/rep_001.gif`;
+      modalGif1.alt = `${sign} rep 2`;
+
+      // prev label — wraps around
+      const prevIdx  = (modalIndex - 1 + n) % n;
+      prevLabel.textContent = label(visibleSigns[prevIdx]);
+
+      // next label — wraps around
+      const nextIdx  = (modalIndex + 1) % n;
+      nextLabel.textContent = label(visibleSigns[nextIdx]);
+    }
+
+    // events
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+
+    // close on backdrop click (outside modal box)
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeModal();
+    });
+
+    btnPrev.addEventListener('click', () => navigate(-1));
+    btnNext.addEventListener('click', () => navigate(+1));
+
+    // keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!backdrop.classList.contains('open')) return;
+      if (e.key === 'Escape')      closeModal();
+      if (e.key === 'ArrowLeft')   navigate(-1);
+      if (e.key === 'ArrowRight')  navigate(+1);
+    });
+
+    // search
+    document.getElementById('searchInput').addEventListener('input', e => {
+      buildGrid(e.target.value);
+    });
+
+    // deep link: signs.html#assalomu_alaykum
+    function handleHash() {
+      const hash = decodeURIComponent(location.hash.slice(1));
+      if (!hash) return;
+      const idx = visibleSigns.indexOf(hash);
+      if (idx !== -1) openModal(idx);
+    }
+
+    // boot
+    buildGrid();
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+  </script>
+</body>
+</html>
