@@ -1,0 +1,64 @@
+# ── Dockerfile.llm ────────────────────────────────────────────────────────────
+# Extends the base web app with:
+#   - Ollama binary (for local LLM inference)
+#   - kmamaroziqov/alloma-1b-q4 model weights (copied from local ~/.ollama/models)
+#
+# BUILD REQUIREMENTS (run from repo root):
+#   cp -r ~/.ollama/models web_app/ollama-models
+#   docker build --platform=linux/amd64 -f web_app/Dockerfile.llm -t uzslr-web-llm .
+#
+# The ollama-models/ folder is gitignored — never commit it.
+# ──────────────────────────────────────────────────────────────────────────────
+
+# FROM --platform=linux/amd64 python:3.9-slim
+FROM python:3.9-slim
+
+# system deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libgl1 \
+        libgomp1 \
+        libgcc-s1 \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# install Ollama binary 
+# Pull the official install script and extract just the binary.
+# Pinning to a specific version keeps builds reproducible.
+RUN curl -fsSL https://ollama.com/install.sh | sh
+
+# working directory 
+WORKDIR /app
+
+# python deps 
+COPY web_app/requirements-docker.txt /app/requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# application source 
+COPY web_app/backend/          /app/web_app/backend/
+COPY web_app/__init__.py       /app/web_app/__init__.py
+RUN  touch                     /app/web_app/backend/__init__.py
+
+COPY web_app/frontend/         /app/web_app/frontend/
+COPY web_app/best_model.pth    /app/web_app/best_model.pth
+COPY show-50-signs/signs/      /app/show-50-signs/signs/
+
+# Ollama model weights 
+# Copied from local ~/.ollama/models (blobs + manifests).
+# Ollama expects its data at $OLLAMA_MODELS (default /root/.ollama/models).
+# We keep the exact same sub-structure: blobs/ and manifests/
+COPY web_app/ollama-models/blobs/      /root/.ollama/models/blobs/
+COPY web_app/ollama-models/manifests/  /root/.ollama/models/manifests/
+
+# environment 
+# Tell FastAPI to enable LLM features
+ENV LLM_ENABLED=true
+# Tell our llm_client where the Ollama binary lives
+ENV OLLAMA_BIN=/usr/local/bin/ollama
+# Ollama data directory (matches where we copied the model)
+ENV OLLAMA_MODELS=/root/.ollama/models
+
+# runtime 
+EXPOSE 7860
+CMD ["uvicorn", "web_app.backend.main:app", "--host", "0.0.0.0", "--port", "7860"]

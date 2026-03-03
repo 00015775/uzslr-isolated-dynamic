@@ -225,4 +225,5 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+web_app/ollama-models/
 

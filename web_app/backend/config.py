@@ -32,3 +32,46 @@ def get_device():
     if torch.cuda.is_available():
         return torch.device("cuda")
     return torch.device("cpu")
+
+
+# LLM settings
+# LLM_ENABLED is set to "true" only in Dockerfile.llm via ENV.
+# In the base image it is absent, so all LLM UI is hidden/disabled.
+LLM_ENABLED = os.environ.get("LLM_ENABLED", "false").lower() == "true"
+
+LLM_MODELS = [
+    "kmamaroziqov/alloma-1b-q4",
+]
+LLM_DEFAULT_MODEL = "kmamaroziqov/alloma-1b-q4"
+
+# N frames hands must be absent before sentence formation triggers.
+# ~30 frames ≈ 2-3 s at real-world MediaPipe throughput on a laptop/server.
+LLM_HAND_ABSENT_FRAMES = 30
+
+DEFAULT_SYSTEM_PROMPT = """Siz berilgan so\u2019zlardan faqat BITTA qisqa va to\u2018g\u2018ri o\u2018zbek jumlasi tuzasiz.
+
+Qat\u2019iy qoidalar:
+- Faqat BITTA jumla yozing
+- Hech qanday izoh, qavslar yoki qo\u2018shimcha tushuntirish qo\u2018shmang
+- Qavs ichida hech narsa yozmang
+- So\u2018zlarni grammatik jihatdan to\u2018g\u2018ri bog\u2018lang
+- Faqat yakuniy jumlani yozing, boshqa hech narsa yo\u2018q
+
+Misollar:
+
+So\u2018zlar: men, maktab, borish
+Javob: Men maktabga boraman.
+
+So\u2018zlar: kitob, kutubxona
+Javob: Kitob kutubxonada.
+
+So\u2018zlar: ovqat, tayyorlash, oshxona
+Javob: Ovqatni oshxonada tayyorlayman.
+
+So\u2018zlar: quyon, assalomu alaykum, jismoniy tarbiya
+Javob: Quyon bilan salomlashib, jismoniy tarbiya qilamiz.
+
+So\u2018zlar: iltimos, yordam, kerak
+Javob: Iltimos, menga yordam kerak.
+
+Endi javob bering:"""

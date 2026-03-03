@@ -25,7 +25,6 @@
       <div class="camera-wrapper" id="cameraWrapper">
         <video id="video" autoplay playsinline muted></video>
         <canvas id="overlay"></canvas>
-
         <div class="camera-overlay-ui">
           <div class="status-pill" id="statusPill">
             <span class="status-dot" id="statusDot"></span>
@@ -36,20 +35,20 @@
           </div>
         </div>
       </div>
-
       <div class="camera-hint">
         Show <strong>both hands</strong> to begin recognition
       </div>
     </section>
 
-    <!-- ── right: prediction ── -->
+    <!-- ── right: prediction + LLM panel ── -->
     <section class="prediction-section">
+
+      <!-- prediction card -->
       <div class="prediction-card" id="predictionCard">
         <div class="prediction-idle" id="predictionIdle">
           <div class="idle-icon">✋🤟</div>
           <p>Waiting for sign…</p>
         </div>
-
         <div class="prediction-result hidden" id="predictionResult">
           <div class="pred-label" id="predLabel">—</div>
           <div class="confidence-wrap">
@@ -64,12 +63,80 @@
         </div>
       </div>
 
+      <!-- recent predictions history -->
       <div class="history-wrap">
         <div class="history-title">recent predictions</div>
         <ol class="history-list" id="historyList"></ol>
       </div>
-    </section>
 
+      <!-- ── LLM panel (shown only when server has LLM_ENABLED=true) ── -->
+      <div class="llm-panel" id="llmPanel" style="display:none">
+
+        <!-- header row: toggle + tooltip -->
+        <div class="llm-header">
+          <div class="llm-toggle-row">
+            <label class="toggle-switch">
+              <input type="checkbox" id="llmToggle" />
+              <span class="toggle-track"></span>
+            </label>
+            <span class="llm-label">LLM Mode (Experimental)</span>
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">
+                LLM Mode collects each predicted sign and uses a local Uzbek
+                language model to form a sentence from them.<br><br>
+                <strong>Note:</strong> the model may make grammatical errors.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- controls (dimmed when toggle is OFF) -->
+        <div class="llm-controls" id="llmControls">
+
+          <!-- model selector -->
+          <div class="llm-field">
+            <label class="llm-field-label">Model</label>
+            <select class="llm-select" id="llmModelSelect"></select>
+          </div>
+
+          <!-- prompt editor -->
+          <div class="llm-field">
+            <label class="llm-field-label">System Prompt</label>
+            <div class="prompt-mode-row">
+              <label class="radio-label">
+                <input type="radio" name="promptMode" value="readonly" checked /> Read-only
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="promptMode" value="edit" /> Edit
+              </label>
+              <button class="reset-btn" id="resetPromptBtn">Reset to default</button>
+            </div>
+            <textarea class="llm-prompt" id="llmPrompt" readonly></textarea>
+          </div>
+
+          <!-- collected signs -->
+          <div class="llm-field">
+            <label class="llm-field-label">
+              Collected signs
+              <button class="clear-signs-btn" id="clearSignsBtn" title="Clear">✕</button>
+            </label>
+            <div class="collected-signs" id="collectedSigns">
+              <span class="collected-empty">No signs collected yet</span>
+            </div>
+          </div>
+
+          <!-- sentence output -->
+          <div class="llm-output-wrap" id="llmOutputWrap">
+            <div class="llm-output-label">Formed sentence</div>
+            <div class="llm-output" id="llmOutput"></div>
+            <div class="llm-status" id="llmStatus"></div>
+          </div>
+
+        </div><!-- /llm-controls -->
+      </div><!-- /llm-panel -->
+
+    </section>
   </main>
 
   <!-- MediaPipe -->
