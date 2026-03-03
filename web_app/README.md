@@ -24,8 +24,11 @@ pip install -r requirements-local.txt
 # go back to root path
 cd ..
 
-# run locally
+# run locally (without llm)
 uvicorn web_app.backend.main:app --reload --port 8000
+
+# run locally (llm enabled)
+LLM_ENABLED=true uvicorn web_app.backend.main:app --reload --port 8000            
 ```
 
 ## Dockerization

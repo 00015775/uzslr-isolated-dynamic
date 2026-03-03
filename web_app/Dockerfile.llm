@@ -1,4 +1,4 @@
-# ── Dockerfile.llm ────────────────────────────────────────────────────────────
+# Dockerfile.llm
 # Extends the base web app with:
 #   - Ollama binary (for local LLM inference)
 #   - kmamaroziqov/alloma-1b-q4 model weights (copied from local ~/.ollama/models)
@@ -8,10 +8,9 @@
 #   docker build --platform=linux/amd64 -f web_app/Dockerfile.llm -t uzslr-web-llm .
 #
 # The ollama-models/ folder is gitignored — never commit it.
-# ──────────────────────────────────────────────────────────────────────────────
 
-# FROM --platform=linux/amd64 python:3.9-slim
-FROM python:3.9-slim
+# FROM python:3.9-slim
+FROM --platform=linux/amd64 python:3.9-slim
 
 # system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -20,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgomp1 \
         libgcc-s1 \
         curl \
+        zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # install Ollama binary 
