@@ -1,4 +1,4 @@
-/* ── reset & base ─────────────────────────────────────────────────────────── */
+/* reset & base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -106,7 +106,7 @@ body::before {
   .main { grid-template-columns: 1fr; }
 }
 
-/* camera section */
+/* ── camera section ───────────────────────────────────────────────────────── */
 /* camera-section positioning handled in .main block */
 
 .camera-wrapper {
@@ -127,6 +127,7 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transform: scaleX(-1);  /* mirror horizontally — natural webcam feel */
 }
 
 #overlay { z-index: 2; }
@@ -340,7 +341,7 @@ body::before {
 .history-sign { color: var(--text); font-size: 0.9rem; }
 .history-conf { color: var(--muted); font-size: 0.8rem; }
 
-/* signs gallery */
+/* signs */
 .signs-header {
   position: relative;
   z-index: 1;

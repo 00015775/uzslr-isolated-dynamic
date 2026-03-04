@@ -1,0 +1,49 @@
+# Use slim Python base
+FROM python:3.9-slim
+
+# Prevent Python from writing .pyc files & enable stdout flushing
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    LLM_ENABLED=true \
+    OLLAMA_BIN=/usr/local/bin/ollama \
+    OLLAMA_MODELS=/root/.ollama/models
+
+# Install only required system dependencies in one layer
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libgl1 \
+        libgomp1 \
+        libgcc-s1 \
+        curl \
+        zstd \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Ollama binary (no extra cache kept)
+RUN curl -fsSL https://ollama.com/install.sh | sh \
+    && rm -rf /root/.cache
+
+# Set working directory
+WORKDIR /app
+
+# Install Python dependencies separately for layer caching
+COPY web_app/requirements-docker.txt ./requirements.txt
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt
+
+# Copy only required application files
+COPY web_app/backend/          web_app/backend/
+COPY web_app/__init__.py       web_app/__init__.py
+RUN touch web_app/backend/__init__.py
+
+COPY web_app/frontend/         web_app/frontend/
+COPY web_app/best_model.pth    web_app/best_model.pth
+COPY show-50-signs/signs/      show-50-signs/signs/
+
+# Copy Ollama model weights (kept separate for caching)
+COPY web_app/ollama-models/blobs/      /root/.ollama/models/blobs/
+COPY web_app/ollama-models/manifests/  /root/.ollama/models/manifests/
+
+EXPOSE 7860
+
+CMD ["uvicorn", "web_app.backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
