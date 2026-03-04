@@ -40,7 +40,12 @@ Open [http://localhost:7860](http://localhost:7860)
 
 ```bash
 docker pull 00015775/uzslr-web:2.0.0 
+
+# on cpu
 docker run -p 7860:7860 00015775/uzslr-web:2.0.0 
+
+# on gpu
+docker run --gpus all -p 7860:7860 00015775/uzslr-web:2.0.0 
 ```
 
 Open [http://localhost:7860](http://localhost:7860) — the **LLM Mode** toggle will be visible in the right panel.
