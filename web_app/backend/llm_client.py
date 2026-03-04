@@ -1,6 +1,6 @@
 """
 llm_client.py
-Manages the ollama subprocess lifecycle and exposes a single async function
+Manages the Ollama subprocess lifecycle and exposes a single async function
 `form_sentence(signs, system_prompt, model)` that returns an Uzbek sentence.
 
 The alloma model requires:
@@ -43,7 +43,7 @@ def _decode_apostrophes(text: str) -> str:
     return text.replace("APST", "'")
 
 
-# chat template
+# chat template 
 # Matches the alloma model's expected format exactly (Llama-3 style).
 _BOS   = "<|begin_of_text|>"
 _EOT   = "<|eot_id|>"
@@ -54,18 +54,28 @@ _ASST_OPEN = "<|start_header_id|>assistant<|end_header_id|>"
 def _build_prompt(system: str, user: str) -> str:
     """
     Build a fully-formatted prompt string for /api/generate.
-    Both system and user text have apostrophes encoded first.
+
+    The alloma model was fine-tuned with a minimal system turn ("You are a
+    helpful assistant"). It barely attends to a long system prompt, so we:
+      - Keep the system turn short and generic (like the HF reference)
+      - Move ALL rules and examples into the user turn
+      - Apostrophe-encode both turns
     """
-    sys_enc  = _encode_apostrophes(system)
-    user_enc = _encode_apostrophes(user)
+    # generic system turn — matches HF fine-tuning style
+    sys_content = _encode_apostrophes("You are a helpful assistant")
+
+    # user turn = full instruction block + examples + actual word list
+    # system arg (our Uzbek prompt) goes here where the model actually reads it
+    user_content = _encode_apostrophes(system + "\n\n" + user)
+
     return (
-        f"{_BOS}{_SYS_OPEN}{sys_enc}{_EOT}"
-        f"{_USR_OPEN}{user_enc}{_EOT}"
+        f"{_BOS}{_SYS_OPEN}{sys_content}{_EOT}"
+        f"{_USR_OPEN}{user_content}{_EOT}"
         f"{_ASST_OPEN}"
     )
 
 
-# ollama process management
+# ollama process management 
 def start_ollama() -> None:
     """Launch Ollama server as a background subprocess."""
     global _ollama_process
@@ -110,7 +120,7 @@ def stop_ollama() -> None:
 async def form_sentence(
     signs: list,
     system_prompt: str,
-    model: str = "kmamaroziqov/alloma-1b-q4",
+    model: str = "kmamaroziqov/alloma-3b-q4",
 ) -> str:
     """
     Send collected sign words to the alloma model and return a formed sentence.
@@ -119,7 +129,10 @@ async def form_sentence(
     system_prompt : Uzbek system prompt from the UI
     model         : ollama model name
     """
-    words_line   = ", ".join(signs)
+    # Issue 2 fix: clean underscores before sending to model
+    # e.g. 'yordam_berish' -> 'yordam berish', 'o\'ynash' stays as-is (no underscore)
+    clean_signs  = [s.replace('_', ' ') for s in signs]
+    words_line   = ", ".join(clean_signs)
     user_message = f"So'zlar: {words_line}"
 
     # build fully-formatted raw prompt with apostrophe encoding
@@ -131,11 +144,11 @@ async def form_sentence(
         "stream": False,
         "raw":    True,          # tell Ollama NOT to apply its own template
         "options": {
-            "temperature": 0.7,       # higher = less looping
-            "num_predict": 40,        # sentences are short, hard cap
-            "repeat_penalty": 1.5,    # strongly penalise repeated tokens
-            "repeat_last_n": 32,      # look back 32 tokens for repeats
-            "stop": [_EOT, "\n"],    # also stop at newline — model adds one per sentence
+            "temperature": 0.3,       # low = consistent, structured output (3B handles this fine)
+            "num_predict": 60,        # slightly more room for longer natural sentences
+            "repeat_penalty": 1.3,
+            "repeat_last_n": 64,
+            "stop": [_EOT, "\n"],
         },
     }
 

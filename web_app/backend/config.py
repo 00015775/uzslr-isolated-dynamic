@@ -40,38 +40,68 @@ def get_device():
 LLM_ENABLED = os.environ.get("LLM_ENABLED", "false").lower() == "true"
 
 LLM_MODELS = [
+    "kmamaroziqov/alloma-3b-q4",
     "kmamaroziqov/alloma-1b-q4",
 ]
-LLM_DEFAULT_MODEL = "kmamaroziqov/alloma-1b-q4"
+LLM_DEFAULT_MODEL = "kmamaroziqov/alloma-3b-q4"
 
 # N frames hands must be absent before sentence formation triggers.
 # ~30 frames ≈ 2-3 s at real-world MediaPipe throughput on a laptop/server.
 LLM_HAND_ABSENT_FRAMES = 30
 
-DEFAULT_SYSTEM_PROMPT = """Siz berilgan so\u2019zlardan faqat BITTA qisqa va to\u2018g\u2018ri o\u2018zbek jumlasi tuzasiz.
+DEFAULT_SYSTEM_PROMPT = """Berilgan so\u2018zlardan bitta o\u2018zbek jumlasi yoz.
 
-Qat\u2019iy qoidalar:
-- Faqat BITTA jumla yozing
-- Hech qanday izoh, qavslar yoki qo\u2018shimcha tushuntirish qo\u2018shmang
-- Qavs ichida hech narsa yozmang
-- So\u2018zlarni grammatik jihatdan to\u2018g\u2018ri bog\u2018lang
-- Faqat yakuniy jumlani yozing, boshqa hech narsa yo\u2018q
+TAQIQLANGAN:
+- "Men ... deb jumla yaratishim mumkin" kabi iboralar
+- "Men bu vazifani bajara olmayman" yoki rad etish
+- Izoh, tushuntirish, qavslar yoki qo\u2018shimcha gap
+- Raqamlar (1. 2. va h.k.)
+- So\u2018zlardan birini takrorlash yoki faqat bitta so\u2018z yozish
+
+RUXSAT:
+- Grammatik qo\u2018shimchalar qo\u2018shish (ga, da, ni, bilan, va, uchun, dan)
+- So\u2018zlar bog\u2018liq bo\u2018lmasa ham eng mantiqiy jumlani tuzish
+
+FORMAT: Faqat bitta tugallangan jumla. Boshqa hech narsa.
 
 Misollar:
 
-So\u2018zlar: men, maktab, borish
-Javob: Men maktabga boraman.
+So\u2018zlar: assalomu alaykum, iltimos, yordam berish
+Javob: Assalomu alaykum, iltimos menga yordam bering.
 
-So\u2018zlar: kitob, kutubxona
-Javob: Kitob kutubxonada.
+So\u2018zlar: maktab, futbol, o\u2018ynash
+Javob: Maktabda futbol o\u2018ynayapmiz.
 
-So\u2018zlar: ovqat, tayyorlash, oshxona
-Javob: Ovqatni oshxonada tayyorlayman.
+So\u2018zlar: bozor, kartoshka, pomidor, kichik
+Javob: Bozordan kichik kartoshka va pomidor oldim.
 
-So\u2018zlar: quyon, assalomu alaykum, jismoniy tarbiya
-Javob: Quyon bilan salomlashib, jismoniy tarbiya qilamiz.
+So\u2018zlar: maktab, kitob, qidirish
+Javob: Maktabda kitob qidiryapman.
 
-So\u2018zlar: iltimos, yordam, kerak
-Javob: Iltimos, menga yordam kerak.
+So\u2018zlar: qish, qor, yomg\u2019ir
+Javob: Qishda qor va yomg\u2019ir yog\u2019di.
 
-Endi javob bering:"""
+So\u2018zlar: restoran, birga, musiqa
+Javob: Restoranda birga musiqa tingladik.
+
+So\u2018zlar: bozor, yomg\u2019ir, yopish
+Javob: Yomg\u2019ir tufayli bozor yopildi.
+
+So\u2018zlar: quyon, kichik, o\u2018ynash
+Javob: Kichik quyon o\u2018ynayapti.
+
+So\u2018zlar: qor, yomg\u2019ir, jismoniy tarbiya
+Javob: Qor va yomg\u2019irli havoda jismoniy tarbiya qildik.
+
+So\u2018zlar: assalomu alaykum, yopish, maktab, yomg\u2019ir
+Javob: Assalomu alaykum, yomg\u2019ir tufayli maktab yopildi.
+
+So\u2018zlar: tosh, shokolad, metro
+Javob: Metroda tosh va shokolad ko\u2018rdim.
+
+Endi:"""
+
+
+# Admin mode unlocks model selector + prompt editor in the UI.
+ADMIN_PASSWORD = "uzslr-admin-2024"
+

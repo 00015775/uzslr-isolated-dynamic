@@ -1,3 +1,5 @@
+.hidden { display: none !important; }
+
 /* reset & base */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -106,7 +108,7 @@ body::before {
   .main { grid-template-columns: 1fr; }
 }
 
-/* ── camera section ───────────────────────────────────────────────────────── */
+/* camera section */
 /* camera-section positioning handled in .main block */
 
 .camera-wrapper {
@@ -341,7 +343,7 @@ body::before {
 .history-sign { color: var(--text); font-size: 0.9rem; }
 .history-conf { color: var(--muted); font-size: 0.8rem; }
 
-/* signs */
+/* signs gallery */
 .signs-header {
   position: relative;
   z-index: 1;
@@ -715,3 +717,210 @@ body::before {
   min-height: 1em;
   font-style: italic;
 }
+
+
+/* modal (shared) */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(0,0,0,0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  align-items: center;
+  justify-content: center;
+}
+.modal-backdrop.open {
+  display: flex !important;   /* override .hidden if somehow both applied */
+}
+
+.modal {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 14px;
+  padding: 2.5rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: modalIn 0.22s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes modalIn {
+  from { opacity:0; transform: scale(0.93) translateY(12px); }
+  to   { opacity:1; transform: scale(1)    translateY(0); }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none;
+  border: 1px solid var(--border-hi);
+  border-radius: 6px;
+  color: var(--muted);
+  font-size: 1rem;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.2s, border-color 0.2s;
+}
+.modal-close:hover { color: var(--text); border-color: var(--text); }
+
+.modal-title {
+  font-family: var(--font-head);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+/* role pill */
+.role-wrap {
+  position: relative;
+  margin-left: 0.75rem;
+}
+
+.role-pill {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 99px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  padding: 5px 12px 5px 8px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  user-select: none;
+}
+.role-pill:hover { border-color: var(--accent); }
+
+.role-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+.role-dot.user  { background: var(--muted); }
+.role-dot.admin { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+
+.role-chevron { font-size: 0.55rem; color: var(--muted); margin-left: 2px; }
+
+.role-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-hi);
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 110px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+.role-option {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.role-option:hover { background: var(--border); }
+
+/* admin controls wrapper inside LLM panel */
+.admin-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--border-hi);
+}
+/* when hidden class is present, ensure it is fully invisible (not just dimmed) */
+.admin-controls.hidden { display: none !important; }
+
+.save-prompt-btn {
+  align-self: flex-end;
+  background: var(--accent);
+  border: none;
+  border-radius: 7px;
+  color: #000;
+  font-family: var(--font-head);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.55rem 1.25rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  margin-top: 0.25rem;
+}
+.save-prompt-btn:hover { opacity: 0.85; }
+.save-prompt-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* admin password modal */
+.admin-modal {
+  width: min(90vw, 360px);
+  padding: 2rem;
+  gap: 1.25rem;
+}
+
+.admin-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.admin-password-input {
+  background: var(--bg);
+  border: 1px solid var(--border-hi);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 0.65rem 1rem;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+.admin-password-input:focus { border-color: var(--accent); }
+.admin-password-input.shake {
+  animation: shake 0.35s ease;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+
+.admin-error {
+  font-size: 0.78rem;
+  color: var(--danger);
+  margin: 0;
+}
+
+.admin-login-btn {
+  background: var(--accent);
+  border: none;
+  border-radius: 8px;
+  color: #000;
+  font-family: var(--font-head);
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.65rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.admin-login-btn:hover { opacity: 0.85; }
+.admin-login-btn:disabled { opacity: 0.5; cursor: default; }

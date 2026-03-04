@@ -15,6 +15,18 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link active">Recognise</a>
       <a href="signs.html" class="nav-link">50 Signs</a>
+      <!-- role pill: single button, dropdown on click -->
+      <div class="role-wrap" id="roleWrap">
+        <button class="role-pill" id="rolePill">
+          <span class="role-dot user" id="roleDot"></span>
+          <span id="roleLabel">User</span>
+          <span class="role-chevron">&#9660;</span>
+        </button>
+        <div class="role-dropdown hidden" id="roleDropdown">
+          <button class="role-option" id="switchToUser">User</button>
+          <button class="role-option" id="switchToAdmin">Admin</button>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -79,7 +91,7 @@
               <input type="checkbox" id="llmToggle" />
               <span class="toggle-track"></span>
             </label>
-            <span class="llm-label">LLM Mode (Experimental)</span>
+            <span class="llm-label">LLM Mode</span>
             <div class="tooltip-wrap">
               <span class="tooltip-icon">?</span>
               <div class="tooltip-box">
@@ -94,25 +106,26 @@
         <!-- controls (dimmed when toggle is OFF) -->
         <div class="llm-controls" id="llmControls">
 
-          <!-- model selector -->
-          <div class="llm-field">
-            <label class="llm-field-label">Model</label>
-            <select class="llm-select" id="llmModelSelect"></select>
-          </div>
-
-          <!-- prompt editor -->
-          <div class="llm-field">
-            <label class="llm-field-label">System Prompt</label>
-            <div class="prompt-mode-row">
-              <label class="radio-label">
-                <input type="radio" name="promptMode" value="readonly" checked /> Read-only
-              </label>
-              <label class="radio-label">
-                <input type="radio" name="promptMode" value="edit" /> Edit
-              </label>
-              <button class="reset-btn" id="resetPromptBtn">Reset to default</button>
+          <!-- admin-only controls: model selector + prompt editor -->
+          <div class="admin-controls hidden" id="adminControls">
+            <div class="llm-field">
+              <label class="llm-field-label">Model</label>
+              <select class="llm-select" id="llmModelSelect"></select>
             </div>
-            <textarea class="llm-prompt" id="llmPrompt" readonly></textarea>
+            <div class="llm-field">
+              <label class="llm-field-label">System Prompt</label>
+              <div class="prompt-mode-row">
+                <label class="radio-label">
+                  <input type="radio" name="promptMode" value="readonly" checked /> Read-only
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="promptMode" value="edit" /> Edit
+                </label>
+                <button class="reset-btn" id="resetPromptBtn">Reset to default</button>
+              </div>
+              <textarea class="llm-prompt" id="llmPrompt" readonly></textarea>
+              <button class="save-prompt-btn" id="savePromptBtn">Save prompt for all users</button>
+            </div>
           </div>
 
           <!-- collected signs -->
@@ -143,6 +156,25 @@
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/holistic.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
+  <!-- admin password modal -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal admin-modal">
+      <button class="modal-close" id="adminModalClose">&#x2715;</button>
+      <div class="modal-title">Admin login</div>
+      <div class="admin-modal-body">
+        <input
+          class="admin-password-input"
+          id="adminPasswordInput"
+          type="password"
+          placeholder="Enter password"
+          autocomplete="new-password"
+        />
+        <p class="admin-error" id="adminError" style="display:none">Incorrect password</p>
+        <button class="admin-login-btn" id="adminLoginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+
   <script src="app.js"></script>
 </body>
 </html>

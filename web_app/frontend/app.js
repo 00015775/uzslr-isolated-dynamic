@@ -1,4 +1,4 @@
-// constants
+// constants 
 const BUFFER_SIZE = 32;
 const WS_URL      = `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws/infer`;
 
@@ -6,7 +6,7 @@ const N_FACE = 468;
 const N_POSE = 33;
 const N_HAND = 21;
 
-// DOM: camera / prediction
+// DOM: camera / prediction 
 const video      = document.getElementById('video');
 const overlay    = document.getElementById('overlay');
 const ctx        = overlay.getContext('2d');
@@ -23,7 +23,7 @@ const confPct          = document.getElementById('confPct');
 const viewSignLink     = document.getElementById('viewSignLink');
 const historyList      = document.getElementById('historyList');
 
-// DOM: LLM panel
+// DOM: LLM panel 
 const llmPanel       = document.getElementById('llmPanel');
 const llmToggle      = document.getElementById('llmToggle');
 const llmControls    = document.getElementById('llmControls');
@@ -35,7 +35,22 @@ const collectedSigns = document.getElementById('collectedSigns');
 const llmOutput      = document.getElementById('llmOutput');
 const llmStatus      = document.getElementById('llmStatus');
 
-// app state
+// DOM: admin 
+const rolePill           = document.getElementById('rolePill');
+const roleDot            = document.getElementById('roleDot');
+const roleLabel          = document.getElementById('roleLabel');
+const roleDropdown       = document.getElementById('roleDropdown');
+const switchToUser       = document.getElementById('switchToUser');
+const switchToAdmin      = document.getElementById('switchToAdmin');
+const adminModal         = document.getElementById('adminModal');
+const adminModalClose    = document.getElementById('adminModalClose');
+const adminPasswordInput = document.getElementById('adminPasswordInput');
+const adminLoginBtn      = document.getElementById('adminLoginBtn');
+const adminError         = document.getElementById('adminError');
+const adminControls      = document.getElementById('adminControls');
+const savePromptBtn      = document.getElementById('savePromptBtn');
+
+// app state 
 let ws                 = null;
 let wsReady            = false;
 let waitingForResponse = false;
@@ -45,7 +60,11 @@ let llmEnabled          = false;
 let llmHandAbsentFrames = 30;
 let defaultSystemPrompt = '';
 
-// CLIENT-SIDE STATE MACHINE
+// Admin state
+let isAdmin    = false;
+let adminToken = null;
+
+// CLIENT-SIDE STATE MACHINE 
 // States:
 //   IDLE          — no hands, nothing happening
 //   FILLING       — hands visible, collecting 32 frames, bar animating
@@ -54,13 +73,13 @@ let defaultSystemPrompt = '';
 //   LLM_FORMING   — POST in flight
 //
 // Transitions:
-//   IDLE       + handsVisible=true              -> FILLING (clear prediction, reset bar)
-//   FILLING    + bufferFull=true + prediction   -> PREDICTED (show prediction)
-//   PREDICTED  + handsVisible=true              -> FILLING (new sign: clear pred, reset bar)
-//   PREDICTED  + handsVisible=false             -> ABSENT (start absent counter)
-//   ABSENT     + handsVisible=true              -> FILLING (new sign)
-//   ABSENT     + absentCount >= threshold       -> LLM_FORMING (if LLM on) or IDLE
-//   LLM_FORMING                                 -> IDLE (after response)
+//   IDLE       + handsVisible=true              → FILLING (clear prediction, reset bar)
+//   FILLING    + bufferFull=true + prediction   → PREDICTED (show prediction)
+//   PREDICTED  + handsVisible=true              → FILLING (new sign: clear pred, reset bar)
+//   PREDICTED  + handsVisible=false             → ABSENT (start absent counter)
+//   ABSENT     + handsVisible=true              → FILLING (new sign)
+//   ABSENT     + absentCount >= threshold       → LLM_FORMING (if LLM on) or IDLE
+//   LLM_FORMING                                 → IDLE (after response)
 
 const STATE = { IDLE: 0, FILLING: 1, PREDICTED: 2, ABSENT: 3, LLM_FORMING: 4 };
 let appState     = STATE.IDLE;
@@ -72,10 +91,10 @@ let predictionLockedUntil = 0;   // timestamp — block state transitions until 
 
 // LLM collection
 let llmActive         = false;
-let collectedSignsMap = new Map();  // sign -> count
+let collectedSignsMap = new Map();  // sign → count
 let lastCollectedSign = null;       // prevents adding same sign repeatedly
 
-// state machine transition
+// state machine transition 
 function transition(newState) {
   appState = newState;
 }
@@ -195,7 +214,7 @@ function updateAbsentStatus() {
   }
 }
 
-// LLM sign collection
+// LLM sign collection 
 function maybeCollectSign(sign) {
   if (sign === lastCollectedSign) return;  // same sign as last — skip
   lastCollectedSign = sign;
@@ -238,7 +257,8 @@ async function formSentence() {
     const res  = await fetch('/api/form-sentence', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ signs: signsList, systemPrompt: prompt, model }),
+      // admin sends their current prompt text; regular users send empty -> server uses active prompt
+    body:    JSON.stringify({ signs: signsList, systemPrompt: isAdmin ? prompt : '', model }),
     });
     const data = await res.json();
 
@@ -289,7 +309,7 @@ function renderChips() {
 
 function setLlmStatus(msg) { llmStatus.textContent = msg; }
 
-// LLM toggle & prompt controls
+// LLM toggle & prompt controls 
 function applyLlmToggle() {
   llmActive = llmToggle.checked;
   llmControls.classList.toggle('disabled', !llmActive);
@@ -306,7 +326,7 @@ document.querySelectorAll('input[name="promptMode"]').forEach(radio => {
   });
 });
 
-// config load
+// config load 
 async function loadConfig() {
   try {
     const res = await fetch('/api/config');
@@ -322,7 +342,8 @@ async function loadConfig() {
         if (m === cfg.llmDefaultModel) opt.selected = true;
         llmModelSelect.appendChild(opt);
       });
-      llmPrompt.value    = defaultSystemPrompt;
+      // use the server's currently active prompt (may differ from default if admin changed it)
+      llmPrompt.value    = cfg.activePrompt || defaultSystemPrompt;
       llmPanel.style.display = 'block';
       applyLlmToggle();
     }
@@ -375,7 +396,7 @@ function resetBufferBar() {
   bufferBar.style.width = '0%';
 }
 
-// WebSocket
+// WebSocket 
 function connectWS() {
   ws = new WebSocket(WS_URL);
   ws.onopen  = () => { wsReady = true; waitingForResponse = false; };
@@ -394,7 +415,7 @@ function connectWS() {
   };
 }
 
-// landmark vector
+// landmark vector 
 const HAND_CONNECTIONS = [
   [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
   [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
@@ -437,7 +458,7 @@ function drawDots(lms,color,r) {
   for (const l of lms) { ctx.beginPath(); ctx.arc(l.x*overlay.width,l.y*overlay.height,r,0,Math.PI*2); ctx.fill(); }
 }
 
-// MediaPipe
+// MediaPipe 
 function initMediaPipe() {
   const holistic = new Holistic({
     locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/${f}`
@@ -469,7 +490,127 @@ function initMediaPipe() {
     .catch(err => { console.error('[camera]', err); setStatus('camera access denied','error'); });
 }
 
-// boot
+// boot 
+// admin logic 
+
+// role pill dropdown 
+let dropdownOpen = false;
+
+function openDropdown()  { dropdownOpen = true;  roleDropdown.classList.remove('hidden'); }
+function closeDropdown() { dropdownOpen = false; roleDropdown.classList.add('hidden'); }
+
+rolePill.addEventListener('click', e => {
+  e.stopPropagation();
+  dropdownOpen ? closeDropdown() : openDropdown();
+});
+
+// close when clicking anywhere outside
+document.addEventListener('click', e => {
+  if (dropdownOpen && !roleDropdown.contains(e.target)) closeDropdown();
+});
+
+// close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeDropdown();
+    closeAdminModal();
+  }
+});
+
+switchToUser.addEventListener('click', () => {
+  closeDropdown();
+  if (isAdmin) exitAdminMode();
+});
+
+switchToAdmin.addEventListener('click', () => {
+  closeDropdown();
+  if (!isAdmin) openAdminModal();
+});
+
+// modal
+function openAdminModal() {
+  adminPasswordInput.value = '';
+  adminError.style.display = 'none';
+  adminModal.classList.add('open');
+  setTimeout(() => adminPasswordInput.focus(), 80);
+}
+function closeAdminModal() {
+  adminModal.classList.remove('open');
+  adminPasswordInput.value = '';
+  adminError.style.display = 'none';
+}
+
+async function attemptAdminLogin() {
+  const pw = adminPasswordInput.value.trim();
+  if (!pw) return;
+  adminLoginBtn.disabled = true;
+  adminError.style.display = 'none';
+  try {
+    const res = await fetch('/api/admin/verify', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ password: pw }),
+    });
+    if (!res.ok) {
+      adminError.style.display = 'block';
+      adminPasswordInput.value = '';
+      adminPasswordInput.classList.add('shake');
+      setTimeout(() => adminPasswordInput.classList.remove('shake'), 400);
+      return;
+    }
+    const data = await res.json();
+    adminToken = data.token;
+    isAdmin    = true;
+    closeAdminModal();
+    enterAdminMode();
+  } catch(e) {
+    adminError.style.display = 'block';
+  } finally {
+    adminLoginBtn.disabled = false;
+  }
+}
+
+function enterAdminMode() {
+  roleDot.className  = 'role-dot admin';
+  roleLabel.textContent = 'Admin';
+  adminControls.classList.remove('hidden');
+}
+
+function exitAdminMode() {
+  isAdmin = false; adminToken = null;
+  roleDot.className  = 'role-dot user';
+  roleLabel.textContent = 'User';
+  adminControls.classList.add('hidden');
+  document.querySelector('input[name="promptMode"][value="readonly"]').checked = true;
+  llmPrompt.readOnly = true;
+}
+
+async function savePrompt() {
+  if (!isAdmin || !adminToken) return;
+  const prompt = llmPrompt.value.trim();
+  if (!prompt) return;
+  savePromptBtn.disabled = true;
+  savePromptBtn.textContent = 'Saving…';
+  try {
+    const res = await fetch('/api/admin/prompt', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ prompt, token: adminToken }),
+    });
+    savePromptBtn.textContent = res.ok ? 'Saved ✓' : 'Error — try again';
+  } catch(e) {
+    savePromptBtn.textContent = 'Error — try again';
+  } finally {
+    savePromptBtn.disabled = false;
+    setTimeout(() => { savePromptBtn.textContent = 'Save prompt for all users'; }, 2000);
+  }
+}
+
+adminModalClose.addEventListener('click', closeAdminModal);
+adminModal.addEventListener('click', e => { if (e.target === adminModal) closeAdminModal(); });
+savePromptBtn.addEventListener('click', savePrompt);
+adminLoginBtn.addEventListener('click', attemptAdminLogin);
+adminPasswordInput.addEventListener('keydown', e => { if (e.key === 'Enter') attemptAdminLogin(); });
+
+// init
 setStatus('starting…', 'inactive');
 loadConfig();
 connectWS();
