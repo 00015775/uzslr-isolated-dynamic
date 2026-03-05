@@ -90,8 +90,8 @@ In one terminal, start Ollama:
 curl -fsSL https://ollama.com/install.sh | sh
 
 # pull llm model
-ollama pull kmamaroziqov/alloma-1b-q4   # one-time download (~2 GB)
 ollama pull kmamaroziqov/alloma-1b-q4   # one-time download (~807 MB)
+ollama pull kmamaroziqov/alloma-3b-q4   # one-time download (~2 GB)
 
 ollama serve
 ```
