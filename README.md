@@ -21,11 +21,15 @@ To achieve this, the repository provides a **full pipeline** that includes:
 | 3 | **Data Preprocessing** ([`preprocessing`](./preprocessing/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
 | 4 | **Model Training and Evaluation** ([`modeling`](./modeling/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
 | 5 | **Real-Time Inferencing** ([`inferencing`](./inferencing/)) | [`uzslr-signs`](./environment-uzslr-signs.yml) |
+| 6 | **Web-App Inferencing** ([`web_app`](./web_app/)) | [`web-uzslr-signs`](./web_app/environment-web-uzslr-signs.yml) |
 
 
 > Note: `video-collector` and `dataset-prep` are foundational steps — they generate a clean, structured dataset that the model will later use.
 
 ---
+
+## Python version
+`3.9.23`
 
 ## Conda Environments
 
@@ -414,6 +418,54 @@ python inference04_main.py
 
 > [!TIP]
 > For setup instructions and troubleshooting, see [`inferencing/README.md`](./inferencing/README.md)
+
+---
+
+## Phase 6: Web Application Deployment ([`web_app`](./web_app/))
+
+**Purpose:** Deploy a real-time web application for recognizing 50 isolated Uzbek signs via webcam. Optionally, the app can form Uzbek sentences using a locally running language model (LLM mode).
+
+> Docker Image: https://hub.docker.com/repository/docker/00015775/uzslr-web
+
+> [!TIP]
+> Check [DockerHub](https://hub.docker.com/repository/docker/00015775/uzslr-web) for the full list of available tags.
+
+### Key Features:
+
+- **Real-time recognition** of 50 Uzbek signs via webcam
+- **MediaPipe Holistic** landmark extraction running entirely in the browser
+- **PyTorch model** for sign classification
+- **50 Signs gallery** with reference GIFs for every sign, searchable and with fullscreen view
+- **LLM Mode** *(optional)* — collects signs and forms Uzbek sentences using [alloma-3b-q4](https://ollama.com/kmamaroziqov/alloma-3b-q4) and [alloma-1b-q4](https://ollama.com/kmamaroziqov/alloma-1b-q4) running locally via Ollama
+- Fully **offline** after first load — no external API calls, no data sent anywhere
+
+
+### Without LLM (sign recognition only)
+
+```bash
+docker pull 00015775/uzslr-web:1.0.0 
+docker run -p 7860:7860 00015775/uzslr-web:1.0.0 
+```
+
+Open [http://localhost:7860](http://localhost:7860)
+
+### With LLM (sign recognition + sentence formation)
+
+```bash
+docker pull 00015775/uzslr-web:2.0.0 
+
+# on cpu
+docker run -p 7860:7860 00015775/uzslr-web:2.0.0 
+
+# on gpu
+docker run --gpus all -p 7860:7860 00015775/uzslr-web:2.0.0 
+```
+
+Open [http://localhost:7860](http://localhost:7860) — the **LLM Mode** toggle will be visible in the right panel.
+
+> [!TIP]
+> For more local or docker setup instructions, see [`web_app/README.md`](./web_app/README.md)
+
 
 ---
 
