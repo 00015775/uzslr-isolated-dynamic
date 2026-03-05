@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UzSLR — Uzbek Sign Language Recognition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav-logo">UzSLR</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link active">Recognise</a>
+      <a href="signs.html" class="nav-link">50 Signs</a>
+      <!-- role pill: single button, dropdown on click -->
+      <div class="role-wrap" id="roleWrap">
+        <button class="role-pill" id="rolePill">
+          <span class="role-dot user" id="roleDot"></span>
+          <span id="roleLabel">User</span>
+          <span class="role-chevron">&#9660;</span>
+        </button>
+        <div class="role-dropdown hidden" id="roleDropdown">
+          <button class="role-option" id="switchToUser">User</button>
+          <button class="role-option" id="switchToAdmin">Admin</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="main">
+
+    <!-- ── left: camera feed ── -->
+    <section class="camera-section">
+      <div class="camera-wrapper" id="cameraWrapper">
+        <video id="video" autoplay playsinline muted></video>
+        <canvas id="overlay"></canvas>
+        <div class="camera-overlay-ui">
+          <div class="status-pill" id="statusPill">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="statusText">starting camera…</span>
+          </div>
+          <div class="buffer-bar-wrap">
+            <div class="buffer-bar" id="bufferBar"></div>
+          </div>
+        </div>
+      </div>
+      <div class="camera-hint">
+        Show <strong>both hands</strong> to begin recognition
+      </div>
+    </section>
+
+    <!-- ── right: prediction + LLM panel ── -->
+    <section class="prediction-section">
+
+      <!-- prediction card -->
+      <div class="prediction-card" id="predictionCard">
+        <div class="prediction-idle" id="predictionIdle">
+          <div class="idle-icon">✋🤟</div>
+          <p>Waiting for sign…</p>
+        </div>
+        <div class="prediction-result hidden" id="predictionResult">
+          <div class="pred-label" id="predLabel">—</div>
+          <div class="confidence-wrap">
+            <div class="confidence-bar-bg">
+              <div class="confidence-bar-fill" id="confBar"></div>
+            </div>
+            <span class="confidence-pct" id="confPct">0%</span>
+          </div>
+          <a class="view-sign-link" id="viewSignLink" href="signs.html" target="_blank">
+            see how this sign looks →
+          </a>
+        </div>
+      </div>
+
+      <!-- recent predictions history -->
+      <div class="history-wrap">
+        <div class="history-title">recent predictions</div>
+        <ol class="history-list" id="historyList"></ol>
+      </div>
+
+      <!-- ── LLM panel (shown only when server has LLM_ENABLED=true) ── -->
+      <div class="llm-panel" id="llmPanel" style="display:none">
+
+        <!-- header row: toggle + tooltip -->
+        <div class="llm-header">
+          <div class="llm-toggle-row">
+            <label class="toggle-switch">
+              <input type="checkbox" id="llmToggle" />
+              <span class="toggle-track"></span>
+            </label>
+            <span class="llm-label">LLM Mode</span>
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <div class="tooltip-box">
+                LLM Mode collects each predicted sign and uses a local Uzbek
+                language model to form a sentence from them.<br><br>
+                <strong>Note:</strong> the model may make grammatical errors.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- controls (dimmed when toggle is OFF) -->
+        <div class="llm-controls" id="llmControls">
+
+          <!-- admin-only controls: model selector + prompt editor -->
+          <div class="admin-controls hidden" id="adminControls">
+            <div class="llm-field">
+              <label class="llm-field-label">Model</label>
+              <select class="llm-select" id="llmModelSelect"></select>
+            </div>
+            <div class="llm-field">
+              <label class="llm-field-label">System Prompt</label>
+              <div class="prompt-mode-row">
+                <label class="radio-label">
+                  <input type="radio" name="promptMode" value="readonly" checked /> Read-only
+                </label>
+                <label class="radio-label">
+                  <input type="radio" name="promptMode" value="edit" /> Edit
+                </label>
+                <button class="reset-btn" id="resetPromptBtn">Reset to default</button>
+              </div>
+              <textarea class="llm-prompt" id="llmPrompt" readonly></textarea>
+              <button class="save-prompt-btn" id="savePromptBtn">Save prompt for all users</button>
+            </div>
+          </div>
+
+          <!-- collected signs -->
+          <div class="llm-field">
+            <label class="llm-field-label">
+              Collected signs
+              <button class="clear-signs-btn" id="clearSignsBtn" title="Clear">✕</button>
+            </label>
+            <div class="collected-signs" id="collectedSigns">
+              <span class="collected-empty">No signs collected yet</span>
+            </div>
+          </div>
+
+          <!-- sentence output -->
+          <div class="llm-output-wrap" id="llmOutputWrap">
+            <div class="llm-output-label">Formed sentence</div>
+            <div class="llm-output" id="llmOutput"></div>
+            <div class="llm-status" id="llmStatus"></div>
+          </div>
+
+        </div><!-- /llm-controls -->
+      </div><!-- /llm-panel -->
+
+    </section>
+  </main>
+
+  <!-- MediaPipe -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/holistic@0.5.1635989137/holistic.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
+  <!-- admin password modal -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal admin-modal">
+      <button class="modal-close" id="adminModalClose">&#x2715;</button>
+      <div class="modal-title">Admin login</div>
+      <div class="admin-modal-body">
+        <input
+          class="admin-password-input"
+          id="adminPasswordInput"
+          type="password"
+          placeholder="Enter password"
+          autocomplete="new-password"
+        />
+        <p class="admin-error" id="adminError" style="display:none">Incorrect password</p>
+        <button class="admin-login-btn" id="adminLoginBtn">Login</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
