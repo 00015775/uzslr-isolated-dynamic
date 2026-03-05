@@ -94,6 +94,11 @@ ollama pull kmamaroziqov/alloma-1b-q4   # one-time download (~807 MB)
 ollama pull kmamaroziqov/alloma-3b-q4   # one-time download (~2 GB)
 
 ollama serve
+
+# need to move to uzslr-isolated-dynamic/web_app/ollama-models
+mkdir -p web_app/ollama-models
+cp -r ~/.ollama/models/blobs     web_app/ollama-models/blobs
+cp -r ~/.ollama/models/manifests web_app/ollama-models/manifests
 ```
 
 In another terminal:
