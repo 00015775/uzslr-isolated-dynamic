@@ -5,7 +5,7 @@
 >  
 > For those interested in **video collection** and understanding the full pipeline, watch this **[Video Tutorial for Video Collection](https://youtu.be/3A1UdCw6Yj4)**.
 >
-> **Folder Tree:** 
+> **Folder Tree:**   
 > To correctly place the dataset within the project, see[`FOLDER_TREE.md`](FOLDER_TREE.md)
 
 
