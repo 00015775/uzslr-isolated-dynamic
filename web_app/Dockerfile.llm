@@ -1,4 +1,3 @@
-# Dockerfile.llm
 # Web app + Ollama + alloma-3b-q4 model bundled inside the image.
 #
 # BUILD (from repo root):
@@ -18,7 +17,7 @@
 # Ollama and PyTorch both auto-detect CUDA at runtime.
 # No rebuild needed — same image works on CPU and GPU.
 
-FROM python:3.9-slim 
+FROM python:3.9-slim
 
 # system deps 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -36,15 +35,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # so the same binary serves both CPU and GPU deployments.
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# working directory
+# working directory 
 WORKDIR /app
 
 # python deps 
-COPY web_app/requirements.txt /app/requirements.txt
+COPY web_app/requirements-docker.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
-# application source
+# application source 
 COPY web_app/backend/          /app/web_app/backend/
 COPY web_app/__init__.py       /app/web_app/__init__.py
 RUN  touch                     /app/web_app/backend/__init__.py
@@ -55,11 +54,11 @@ COPY web_app/best_model.pth    /app/web_app/best_model.pth
 COPY web_app/sign_videos/       /app/web_app/sign_videos/
 COPY show-50-signs/signs/      /app/show-50-signs/signs/
 
-# Ollama model weights
+# Ollama model weights 
 COPY web_app/ollama-models/blobs/      /root/.ollama/models/blobs/
 COPY web_app/ollama-models/manifests/  /root/.ollama/models/manifests/
 
-# environment
+# environment 
 ENV LLM_ENABLED=true
 ENV OLLAMA_BIN=/usr/local/bin/ollama
 ENV OLLAMA_MODELS=/root/.ollama/models
@@ -69,6 +68,6 @@ ENV OLLAMA_MODELS=/root/.ollama/models
 # Set to 0 to let Ollama use all available VRAM.
 # ENV OLLAMA_GPU_OVERHEAD=512000000
 
-# runtime
+# runtime 
 EXPOSE 7860
 CMD ["uvicorn", "web_app.backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
