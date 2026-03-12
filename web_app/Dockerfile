@@ -22,7 +22,7 @@ WORKDIR /app
 # pip dependencies
 # Copy requirements first so Docker layer-caches this step.
 # Only re-runs when requirements.txt changes, not on every code change.
-COPY web_app/requirements.txt /app/requirements.txt
+COPY web_app/requirements-docker.txt /app/requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
 
