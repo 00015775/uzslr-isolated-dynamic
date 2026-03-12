@@ -158,6 +158,7 @@
     <div class="nav-links">
       <a href="index.html" class="nav-link">Recognise</a>
       <a href="signs.html" class="nav-link active">50 Signs</a>
+      <a href="sign_production.html" class="nav-link">Produce</a>
     </div>
   </nav>
 
@@ -169,7 +170,7 @@
 
   <div class="signs-grid" id="signsGrid"></div>
 
-  <!-- ── fullscreen modal ── -->
+  <!-- fullscreen modal -->
   <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true">
     <div class="modal" id="modal">
       <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
@@ -214,7 +215,7 @@
 
     function label(s) { return s.replace(/_/g, ' '); }
 
-    // grid
+    // grid 
     function buildGrid(filter = '') {
       const grid = document.getElementById('signsGrid');
       grid.innerHTML = '';
@@ -253,7 +254,7 @@
       });
     }
 
-    // modal
+    // modal 
     const backdrop   = document.getElementById('modalBackdrop');
     const modalTitle = document.getElementById('modalTitle');
     const modalCounter = document.getElementById('modalCounter');
@@ -306,7 +307,7 @@
       nextLabel.textContent = label(visibleSigns[nextIdx]);
     }
 
-    // events
+    // events 
     document.getElementById('modalClose').addEventListener('click', closeModal);
 
     // close on backdrop click (outside modal box)

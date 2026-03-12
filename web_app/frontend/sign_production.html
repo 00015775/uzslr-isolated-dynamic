@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UzSLR — Produce Sign Video</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .produce-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .produce-header { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+    .produce-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 800; color: var(--accent); letter-spacing: 0.04em; }
+    .produce-subtitle { color: var(--muted); font-size: 0.82rem; }
+
+    /* VIDEO */
+    .video-section { background: #000; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+    .video-placeholder { display: flex; align-items: center; justify-content: center; height: 440px; color: var(--muted); font-size: 0.85rem; flex-direction: column; gap: 0.75rem; }
+    .video-placeholder-icon { font-size: 3.5rem; opacity: 0.2; }
+    #outputVideo { width: 100%; max-height: 540px; display: none; background: #000; }
+    #outputVideo.visible { display: block; }
+    .video-bar { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: var(--surface); border-top: 1px solid var(--border); }
+    .video-sequence-label { font-size: 0.78rem; color: var(--muted); }
+    .video-sequence-label span { color: var(--accent2); }
+    .btn-download { font-family: var(--font-mono); font-size: 0.75rem; padding: 0.35rem 0.85rem; border-radius: 5px; border: 1px solid var(--border-hi); background: transparent; color: var(--text); cursor: pointer; text-decoration: none; display: none; }
+    .btn-download.visible { display: inline-block; }
+    .btn-download:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* BOTTOM */
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 750px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
+    .panel-title { font-family: var(--font-head); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+    /* PICKER */
+    .sign-search { width: 100%; background: var(--bg); border: 1px solid var(--border-hi); border-radius: 6px; color: var(--text); font-family: var(--font-mono); font-size: 0.82rem; padding: 0.5rem 0.75rem; outline: none; }
+    .sign-search:focus { border-color: var(--accent); }
+    .signs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 0.4rem; max-height: 300px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-hi) transparent; }
+    .sign-chip { background: var(--bg); border: 1px solid var(--border-hi); border-radius: 6px; padding: 0.5rem 0.5rem; font-size: 0.8rem; color: var(--text); cursor: pointer; text-align: center; transition: border-color 0.12s, color 0.12s; user-select: none; word-break: break-all; }
+    .sign-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* SEQUENCE */
+    .sequence-area { min-height: 90px; flex: 1; background: var(--bg); border: 1px dashed var(--border-hi); border-radius: 6px; padding: 0.65rem; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0.45rem; }
+    .sequence-area.drag-over { border-color: var(--accent); }
+    .seq-chip { display: flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border-hi); border-radius: 6px; padding: 0.45rem 0.5rem 0.45rem 0.7rem; font-size: 0.82rem; cursor: grab; user-select: none; }
+    .seq-chip:active { cursor: grabbing; }
+    .seq-chip.dragging { opacity: 0.3; }
+    .seq-chip-num { font-size: 0.65rem; color: var(--muted); min-width: 14px; }
+    .seq-chip-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0 0.1rem; }
+    .seq-chip-remove:hover { color: var(--danger); }
+    .seq-empty { color: var(--muted); font-size: 0.82rem; padding: 0.3rem; }
+
+    /* CONTROLS */
+    .controls-row { display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap; }
+    .btn { font-family: var(--font-mono); font-size: 0.82rem; font-weight: 500; padding: 0.6rem 1.3rem; border-radius: 6px; border: none; cursor: pointer; transition: opacity 0.15s; }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-primary { background: var(--accent); color: #000; font-weight: 700; }
+    .btn-primary:hover:not(:disabled) { opacity: 0.85; }
+    .btn-ghost { background: transparent; border: 1px solid var(--border-hi); color: var(--muted); }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--text); color: var(--text); }
+    .status-line { font-size: 0.78rem; color: var(--muted); min-height: 1.2em; }
+    .status-line.error { color: var(--danger); }
+    .status-line.ok { color: var(--accent2); }
+
+    .spinner { display: inline-block; width: 10px; height: 10px; border: 2px solid rgba(0,0,0,0.3); border-top-color: #000; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-logo">UzSLR</div>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Recognise</a>
+      <a href="signs.html" class="nav-link">50 Signs</a>
+      <a href="sign_production.html" class="nav-link active">Produce</a>
+    </div>
+  </nav>
+
+  <div class="produce-layout">
+    <div class="produce-header">
+      <h1 class="produce-title">Produce Sign Video</h1>
+      <p class="produce-subtitle">Build a sequence → generate an avatar signing it</p>
+    </div>
+
+    <div class="video-section">
+      <div class="video-placeholder" id="videoPlaceholder">
+        <div class="video-placeholder-icon">▶</div>
+        <div>Select signs below and click <strong style="color:var(--text)">Generate</strong></div>
+      </div>
+      <video id="outputVideo" controls autoplay loop playsinline></video>
+      <div class="video-bar">
+        <div class="video-sequence-label" id="videoLabel">—</div>
+        <a class="btn-download" id="downloadBtn" download="sign_sequence.mp4">↓ Download</a>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="panel">
+        <div class="panel-title">Available Signs <span id="signCount" style="font-weight:400"></span></div>
+        <input class="sign-search" type="text" id="signSearch" placeholder="search signs…" autocomplete="off" />
+        <div class="signs-grid" id="signsGrid">
+          <span style="color:var(--muted);font-size:0.8rem">Loading…</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Sequence <span id="seqCount" style="font-weight:400"></span></div>
+        <div class="sequence-area" id="sequenceArea">
+          <span class="seq-empty" id="seqEmpty">Click signs to add · drag to reorder</span>
+        </div>
+        <div class="controls-row">
+          <button class="btn btn-primary" id="generateBtn" disabled>Generate</button>
+          <button class="btn btn-ghost" id="clearBtn">Clear</button>
+        </div>
+        <div class="status-line" id="statusLine"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const signsGrid        = document.getElementById('signsGrid');
+    const signSearch       = document.getElementById('signSearch');
+    const signCount        = document.getElementById('signCount');
+    const sequenceArea     = document.getElementById('sequenceArea');
+    const seqEmpty         = document.getElementById('seqEmpty');
+    const seqCountEl       = document.getElementById('seqCount');
+    const generateBtn      = document.getElementById('generateBtn');
+    const clearBtn         = document.getElementById('clearBtn');
+    const statusLine       = document.getElementById('statusLine');
+    const videoPlaceholder = document.getElementById('videoPlaceholder');
+    const outputVideo      = document.getElementById('outputVideo');
+    const videoLabel       = document.getElementById('videoLabel');
+    const downloadBtn      = document.getElementById('downloadBtn');
+
+    let allSigns = [], sequence = [], dragSrcIdx = null, currentBlobUrl = null;
+
+    async function loadSigns() {
+      try {
+        const res  = await fetch('/api/signs-list');
+        const data = await res.json();
+        allSigns   = data.signs || [];
+        signCount.textContent = `(${allSigns.length})`;
+        renderSignGrid(allSigns);
+      } catch { signsGrid.innerHTML = '<span style="color:var(--danger)">Failed to load</span>'; }
+    }
+
+    function renderSignGrid(signs) {
+      signsGrid.innerHTML = '';
+      if (!signs.length) { signsGrid.innerHTML = '<span style="color:var(--muted);font-size:0.8rem">No matches</span>'; return; }
+      signs.forEach(sign => {
+        const chip = document.createElement('div');
+        chip.className = 'sign-chip';
+        chip.textContent = sign;
+        chip.addEventListener('click', () => addToSequence(sign));
+        signsGrid.appendChild(chip);
+      });
+    }
+
+    signSearch.addEventListener('input', () => {
+      const q = signSearch.value.toLowerCase();
+      renderSignGrid(q ? allSigns.filter(s => s.toLowerCase().includes(q)) : allSigns);
+    });
+
+    function addToSequence(sign) { sequence.push(sign); renderSequence(); }
+    function removeFromSequence(idx) { sequence.splice(idx, 1); renderSequence(); }
+
+    function renderSequence() {
+      sequenceArea.innerHTML = '';
+      seqCountEl.textContent = sequence.length ? `(${sequence.length})` : '';
+      if (!sequence.length) { sequenceArea.appendChild(seqEmpty); generateBtn.disabled = true; return; }
+      generateBtn.disabled = false;
+      sequence.forEach((sign, idx) => {
+        const chip = document.createElement('div');
+        chip.className = 'seq-chip';
+        chip.draggable = true;
+        chip.innerHTML = `<span class="seq-chip-num">${idx+1}</span><span>${sign}</span><button class="seq-chip-remove" title="Remove">×</button>`;
+        chip.querySelector('.seq-chip-remove').addEventListener('click', e => { e.stopPropagation(); removeFromSequence(idx); });
+        chip.addEventListener('dragstart', e => { dragSrcIdx = idx; chip.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+        chip.addEventListener('dragend', () => chip.classList.remove('dragging'));
+        chip.addEventListener('dragover', e => { e.preventDefault(); });
+        chip.addEventListener('drop', e => {
+          e.preventDefault();
+          if (dragSrcIdx === null || dragSrcIdx === idx) return;
+          const [m] = sequence.splice(dragSrcIdx, 1);
+          sequence.splice(idx, 0, m);
+          dragSrcIdx = null;
+          renderSequence();
+        });
+        sequenceArea.appendChild(chip);
+      });
+    }
+
+    clearBtn.addEventListener('click', () => { sequence = []; renderSequence(); resetVideo(); setStatus(''); });
+
+    generateBtn.addEventListener('click', async () => {
+      if (!sequence.length) return;
+      generateBtn.disabled = true; clearBtn.disabled = true;
+      setStatus('<span class="spinner"></span>Generating…');
+      resetVideo();
+      try {
+        const res = await fetch('/api/produce-sign-video', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ signs: sequence }),
+        });
+        if (!res.ok) { const e = await res.json().catch(() => ({ detail: res.statusText })); throw new Error(e.detail); }
+        const blob = await res.blob();
+        if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        currentBlobUrl = URL.createObjectURL(blob);
+        outputVideo.src = currentBlobUrl;
+        outputVideo.classList.add('visible');
+        videoPlaceholder.style.display = 'none';
+        videoLabel.innerHTML = `<span>${sequence.join(' → ')}</span>`;
+        downloadBtn.href = currentBlobUrl;
+        downloadBtn.classList.add('visible');
+        setStatus(`✓ ${sequence.length} sign${sequence.length > 1 ? 's' : ''} generated`, 'ok');
+      } catch (e) {
+        setStatus(`Error: ${e.message}`, 'error');
+      } finally {
+        generateBtn.disabled = false; clearBtn.disabled = false;
+      }
+    });
+
+    function resetVideo() {
+      outputVideo.src = ''; outputVideo.classList.remove('visible');
+      videoPlaceholder.style.display = 'flex';
+      downloadBtn.classList.remove('visible');
+      videoLabel.textContent = '—';
+    }
+    function setStatus(html, cls = '') { statusLine.innerHTML = html; statusLine.className = 'status-line' + (cls ? ' ' + cls : ''); }
+
+    loadSigns();
+  </script>
+</body>
+</html>

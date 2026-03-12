@@ -226,4 +226,5 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 web_app/ollama-models/
-
+dwpose_weights
+dwpose_weights.zip
