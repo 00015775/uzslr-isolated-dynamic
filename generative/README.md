@@ -93,8 +93,6 @@ ls MusePose/assets/
 # pick a full-body standing person photo
 ```
 
-Or download a free stock photo: https://www.pexels.com/search/full%20body%20standing/
-
 Requirements for reference image:
 - Full body visible (head to at least knees)
 - Front-facing, neutral stance
