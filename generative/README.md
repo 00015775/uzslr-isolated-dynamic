@@ -1,5 +1,8 @@
 # Sign Language Production Pipeline
 
+> [!NOTE]
+> The code in this folder was originally executed on an Ubuntu server. The folder is kept only as a reference for how to extract `dwpose` coordinates. Because later updates were not applied here, the code may no longer work or may be outdated.
+
 Generates pre-rendered avatar sign videos from signer10 source videos.
 Run Phase 1 locally (macOS), Phase 2 on the Ubuntu RTX 5090 machine.
 
