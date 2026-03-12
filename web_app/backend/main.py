@@ -35,7 +35,7 @@ _SIGNS_DIR    = _REPO_ROOT  / "show-50-signs" / "signs"
 _FRONTEND_DIR = _WEBAPP_DIR / "frontend"
 
 
-# global singletons
+# global singletons 
 device     = None
 model      = None
 preprocess = None
@@ -53,7 +53,7 @@ _admin_tokens: set = set()
 async def lifespan(app: FastAPI):
     global device, model, preprocess
 
-    # sign recognition model
+    # sign recognition model 
     device = get_device()
     print(f"[startup] using device: {device}")
 
@@ -82,7 +82,7 @@ async def lifespan(app: FastAPI):
     print("[startup] ready")
     yield
 
-    # shutdown 
+    # shutdown
     if LLM_ENABLED:
         from web_app.backend.llm_client import stop_ollama
         stop_ollama()
@@ -140,7 +140,7 @@ async def get_active_prompt():
     return JSONResponse({"prompt": _active_prompt})
 
 
-# REST: sentence formation
+# REST: sentence formation 
 class SentenceRequest(BaseModel):
     signs:        list[str]
     systemPrompt: str
@@ -169,7 +169,7 @@ async def form_sentence_endpoint(req: SentenceRequest):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-# WebSocket: real-time sign inference
+# WebSocket: real-time sign inference 
 @app.websocket("/ws/infer")
 async def websocket_infer(ws: WebSocket):
     await ws.accept()
@@ -188,7 +188,7 @@ async def websocket_infer(ws: WebSocket):
 
             vec = np.array(landmarks, dtype=np.float32)
 
-            # hand tracking
+            # hand tracking 
             if has_both_hands:
                 hand_disappear_counter = 0
                 if not hands_were_visible:
@@ -276,6 +276,11 @@ async def produce_sign_video(req: ProduceVideoRequest):
     if missing:
         raise HTTPException(status_code=400, detail=f"Unknown signs: {missing}")
 
+    # reject adjacent duplicates (same sign twice in a row)
+    for i in range(len(req.signs) - 1):
+        if req.signs[i] == req.signs[i + 1]:
+            raise HTTPException(status_code=400, detail=f"Adjacent duplicate: '{req.signs[i]}' appears twice in a row")
+
     rest = _SIGN_VIDEOS_DIR / "rest.mp4"
     clips = []
     for i, sign in enumerate(req.signs):
@@ -287,8 +292,10 @@ async def produce_sign_video(req: ProduceVideoRequest):
     try:
         list_file = tmp_dir / "concat.txt"
         with open(list_file, "w") as f:
-            for c in clips:
-                f.write(f"file '{c}'\n")
+            for clip in clips:
+                # ffmpeg concat: single-quote the path and escape internal single quotes as '\''
+                safe = clip.replace("'", "'\\''")
+                f.write(f"file '{safe}'\n")
 
         out_file = tmp_dir / "output.mp4"
         result = _subprocess.run([

@@ -46,6 +46,7 @@
     .signs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 0.4rem; max-height: 300px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border-hi) transparent; }
     .sign-chip { background: var(--bg); border: 1px solid var(--border-hi); border-radius: 6px; padding: 0.5rem 0.5rem; font-size: 0.8rem; color: var(--text); cursor: pointer; text-align: center; transition: border-color 0.12s, color 0.12s; user-select: none; word-break: break-all; }
     .sign-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .sign-chip-disabled { opacity: 0.35; cursor: not-allowed !important; border-color: var(--border) !important; color: var(--muted) !important; }
 
     /* SEQUENCE */
     .sequence-area { min-height: 90px; flex: 1; background: var(--bg); border: 1px dashed var(--border-hi); border-radius: 6px; padding: 0.65rem; display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0.45rem; }
@@ -162,6 +163,20 @@
         chip.addEventListener('click', () => addToSequence(sign));
         signsGrid.appendChild(chip);
       });
+      updateChipStates();
+    }
+
+    function updateChipStates() {
+      const lastSign = sequence.length > 0 ? sequence[sequence.length - 1] : null;
+      document.querySelectorAll('.sign-chip').forEach(chip => {
+        if (chip.textContent === lastSign) {
+          chip.classList.add('sign-chip-disabled');
+          chip.title = `Cannot add "${lastSign}" twice in a row`;
+        } else {
+          chip.classList.remove('sign-chip-disabled');
+          chip.title = '';
+        }
+      });
     }
 
     signSearch.addEventListener('input', () => {
@@ -169,8 +184,17 @@
       renderSignGrid(q ? allSigns.filter(s => s.toLowerCase().includes(q)) : allSigns);
     });
 
-    function addToSequence(sign) { sequence.push(sign); renderSequence(); }
-    function removeFromSequence(idx) { sequence.splice(idx, 1); renderSequence(); }
+    function addToSequence(sign) {
+      if (sequence.length > 0 && sequence[sequence.length - 1] === sign) return; // no adjacent duplicate
+      sequence.push(sign);
+      renderSequence();
+      updateChipStates();
+    }
+    function removeFromSequence(idx) {
+      sequence.splice(idx, 1);
+      renderSequence();
+      updateChipStates();
+    }
 
     function renderSequence() {
       sequenceArea.innerHTML = '';
@@ -193,6 +217,7 @@
           sequence.splice(idx, 0, m);
           dragSrcIdx = null;
           renderSequence();
+          updateChipStates();
         });
         sequenceArea.appendChild(chip);
       });

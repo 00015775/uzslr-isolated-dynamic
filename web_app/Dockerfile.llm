@@ -67,7 +67,7 @@ ENV OLLAMA_MODELS=/root/.ollama/models
 # Ollama GPU memory control — leave headroom for PyTorch sign model.
 # On a GPU with 8GB+ VRAM this is safe. Adjust if you have less.
 # Set to 0 to let Ollama use all available VRAM.
-ENV OLLAMA_GPU_OVERHEAD=512000000
+# ENV OLLAMA_GPU_OVERHEAD=512000000
 
 # runtime
 EXPOSE 7860
