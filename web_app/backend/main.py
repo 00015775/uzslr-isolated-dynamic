@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-# path resolution 
+# path resolution
 # this file lives at: <repo>/web_app/backend/main.py
 _BACKEND_DIR = pathlib.Path(__file__).parent.resolve()   # .../web_app/backend
 _WEBAPP_DIR  = _BACKEND_DIR.parent                        # .../web_app
@@ -53,7 +53,7 @@ _admin_tokens: set = set()
 async def lifespan(app: FastAPI):
     global device, model, preprocess
 
-    # sign recognition 
+    # sign recognition model 
     device = get_device()
     print(f"[startup] using device: {device}")
 
@@ -202,7 +202,7 @@ async def websocket_infer(ws: WebSocket):
                         hands_were_visible = False
                         frame_buffer       = []
 
-            # buffer & predict
+            # buffer & predict 
             prediction = None
             confidence = None
             buffer_full = False
@@ -243,6 +243,82 @@ async def websocket_infer(ws: WebSocket):
         pass
 
 
-# static files 
-app.mount("/signs", StaticFiles(directory=str(_SIGNS_DIR)),    name="signs")
-app.mount("/",      StaticFiles(directory=str(_FRONTEND_DIR),  html=True), name="frontend")
+# REST: sign video production
+import subprocess as _subprocess, tempfile as _tempfile, shutil as _shutil
+from fastapi.responses import FileResponse
+
+_SIGN_VIDEOS_DIR = _WEBAPP_DIR / "sign_videos"
+
+
+@app.get("/api/signs-list")
+async def get_signs_list():
+    """Return list of all available pre-rendered sign names."""
+    if not _SIGN_VIDEOS_DIR.exists():
+        return JSONResponse({"signs": []})
+    signs = sorted(
+        p.stem for p in _SIGN_VIDEOS_DIR.glob("*.mp4")
+        if p.stem != "rest"
+    )
+    return JSONResponse({"signs": signs})
+
+
+class ProduceVideoRequest(BaseModel):
+    signs: list[str]
+
+
+@app.post("/api/produce-sign-video")
+async def produce_sign_video(req: ProduceVideoRequest):
+    """Stitch requested signs with rest.mp4 between them and return MP4."""
+    if not req.signs:
+        raise HTTPException(status_code=400, detail="No signs provided")
+
+    missing = [s for s in req.signs if not (_SIGN_VIDEOS_DIR / f"{s}.mp4").exists()]
+    if missing:
+        raise HTTPException(status_code=400, detail=f"Unknown signs: {missing}")
+
+    # reject adjacent duplicates (same sign twice in a row)
+    for i in range(len(req.signs) - 1):
+        if req.signs[i] == req.signs[i + 1]:
+            raise HTTPException(status_code=400, detail=f"Adjacent duplicate: '{req.signs[i]}' appears twice in a row")
+
+    rest = _SIGN_VIDEOS_DIR / "rest.mp4"
+    clips = []
+    for i, sign in enumerate(req.signs):
+        clips.append(str(_SIGN_VIDEOS_DIR / f"{sign}.mp4"))
+        if i < len(req.signs) - 1 and rest.exists():
+            clips.append(str(rest))
+
+    tmp_dir = pathlib.Path(_tempfile.mkdtemp())
+    try:
+        list_file = tmp_dir / "concat.txt"
+        with open(list_file, "w") as f:
+            for clip in clips:
+                # ffmpeg concat: single-quote the path and escape internal single quotes as '\''
+                safe = clip.replace("'", "'\\''")
+                f.write(f"file '{safe}'\n")
+
+        out_file = tmp_dir / "output.mp4"
+        result = _subprocess.run([
+            "ffmpeg", "-y",
+            "-f", "concat", "-safe", "0",
+            "-i", str(list_file),
+            "-c", "copy",
+            str(out_file)
+        ], capture_output=True, text=True)
+
+        if result.returncode != 0:
+            raise HTTPException(status_code=500, detail=f"ffmpeg error: {result.stderr[-300:]}")
+
+        return FileResponse(path=str(out_file), media_type="video/mp4", filename="sign_sequence.mp4")
+    except HTTPException:
+        _shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise
+    except Exception as e:
+        _shutil.rmtree(tmp_dir, ignore_errors=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# static files
+app.mount("/signs",       StaticFiles(directory=str(_SIGNS_DIR)),       name="signs")
+app.mount("/sign-videos", StaticFiles(directory=str(_SIGN_VIDEOS_DIR)), name="sign-videos")
+app.mount("/",            StaticFiles(directory=str(_FRONTEND_DIR), html=True), name="frontend")

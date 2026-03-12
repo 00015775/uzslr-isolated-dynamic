@@ -13,6 +13,9 @@
   <img src="docs/gifs/inference_usage.gif" alt="Inference Demo" width="600">
 </p>
 
+> [!NOTE]
+> [Watch video demo](https://youtu.be/JsLLAHx5CxA)
+
 This repository aims to develop a **machine learning model for recognizing isolated dynamic Uzbek Sign Language (UzSL)** from video data.  
 
 To achieve this, the repository provides a **full pipeline** that includes:

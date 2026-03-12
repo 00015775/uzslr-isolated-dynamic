@@ -1,18 +1,25 @@
-# Dockerfile.llm
-# Extends the base web app with:
-#   - Ollama binary (for local LLM inference)
-#   - kmamaroziqov/alloma-1b-q4 model weights (copied from local ~/.ollama/models)
+# Web app + Ollama + alloma-3b-q4 model bundled inside the image.
 #
-# BUILD REQUIREMENTS (run from repo root):
-#   cp -r ~/.ollama/models web_app/ollama-models
-#   docker build --platform=linux/amd64 -f web_app/Dockerfile.llm -t uzslr-web-llm .
+# BUILD (from repo root):
+#   # copy model cache first (one-time):
+#   mkdir -p web_app/ollama-models
+#   cp -r ~/.ollama/models/blobs     web_app/ollama-models/blobs
+#   cp -r ~/.ollama/models/manifests web_app/ollama-models/manifests
 #
-# The ollama-models/ folder is gitignored — never commit it.
+#   docker build --platform=linux/amd64 -f web_app/Dockerfile.llm -t uzslr-web:llm .
+#
+# RUN — CPU only (any machine):
+#   docker run -p 7860:7860 uzslr-web:llm
+#
+# RUN — GPU (requires NVIDIA Container Toolkit on the host):
+#   docker run --gpus all -p 7860:7860 uzslr-web:llm
+#
+# Ollama and PyTorch both auto-detect CUDA at runtime.
+# No rebuild needed — same image works on CPU and GPU.
 
-# FROM --platform=linux/amd64 python:3.9-slim
 FROM python:3.9-slim
 
-# system deps
+# system deps 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libglib2.0-0 \
         libgl1 \
@@ -20,11 +27,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libgcc-s1 \
         curl \
         zstd \
+        ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# install Ollama binary 
-# Pull the official install script and extract just the binary.
-# Pinning to a specific version keeps builds reproducible.
+# Ollama binary 
+# The install script detects NVIDIA drivers at RUNTIME (not build time),
+# so the same binary serves both CPU and GPU deployments.
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
 # working directory 
@@ -39,25 +47,26 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY web_app/backend/          /app/web_app/backend/
 COPY web_app/__init__.py       /app/web_app/__init__.py
 RUN  touch                     /app/web_app/backend/__init__.py
-
 COPY web_app/frontend/         /app/web_app/frontend/
 COPY web_app/best_model.pth    /app/web_app/best_model.pth
+
+# pre-rendered sign videos
+COPY web_app/sign_videos/       /app/web_app/sign_videos/
 COPY show-50-signs/signs/      /app/show-50-signs/signs/
 
 # Ollama model weights 
-# Copied from local ~/.ollama/models (blobs + manifests).
-# Ollama expects its data at $OLLAMA_MODELS (default /root/.ollama/models).
-# We keep the exact same sub-structure: blobs/ and manifests/
 COPY web_app/ollama-models/blobs/      /root/.ollama/models/blobs/
 COPY web_app/ollama-models/manifests/  /root/.ollama/models/manifests/
 
 # environment 
-# Tell FastAPI to enable LLM features
 ENV LLM_ENABLED=true
-# Tell our llm_client where the Ollama binary lives
 ENV OLLAMA_BIN=/usr/local/bin/ollama
-# Ollama data directory (matches where we copied the model)
 ENV OLLAMA_MODELS=/root/.ollama/models
+
+# Ollama GPU memory control — leave headroom for PyTorch sign model.
+# On a GPU with 8GB+ VRAM this is safe. Adjust if you have less.
+# Set to 0 to let Ollama use all available VRAM.
+# ENV OLLAMA_GPU_OVERHEAD=512000000
 
 # runtime 
 EXPOSE 7860
